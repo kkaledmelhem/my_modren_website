@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class WebController {
 
-    @GetMapping(value = {"/{path:^(?!api|static|assets|favicon).*}/**"})
+    @GetMapping(value = {"/{path:^(?!api|static|assets|favicon|index\\.html).*}/**"})
     public String forwardToIndex() {
         return "forward:/index.html";
     }
