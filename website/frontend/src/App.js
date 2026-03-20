@@ -1,19 +1,66 @@
-import { useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import tr from './translations';
+import Loader from './components/Loader';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
 import Skills from './components/Skills';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
-import Stats from './components/Stats';
-import Germany from './components/Germany';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import Cursor from './components/Cursor';
+
+export const AppCtx = createContext();
+export const useApp = () => useContext(AppCtx);
 
 function App() {
+  const [theme, setTheme]       = useState(() => localStorage.getItem('km-theme') || 'dark');
+  const [lang, setLang]         = useState(() => localStorage.getItem('km-lang') || 'en');
+  const [scrollPct, setScrollPct] = useState(0);
+  const [showTop, setShowTop]   = useState(false);
+  const [loaded, setLoaded]     = useState(false);
+
+  const t = tr[lang];
+
+  const toggleTheme = () =>
+    setTheme((prev) => {
+      const next = prev === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('km-theme', next);
+      return next;
+    });
+
+  const toggleLang = () =>
+    setLang((prev) => {
+      const next = prev === 'en' ? 'ar' : 'en';
+      localStorage.setItem('km-lang', next);
+      return next;
+    });
+
   useEffect(() => {
-    // Reveal-on-scroll using IntersectionObserver
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  useEffect(() => {
+    document.documentElement.dir  = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const el = document.documentElement;
+      const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+      setScrollPct(Math.min(pct, 100));
+      setShowTop(el.scrollTop > 400);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!loaded) return;
     const revealEls = document.querySelectorAll('.reveal');
+    revealEls.forEach((el) => el.classList.remove('visible'));
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -31,10 +78,22 @@ function App() {
       observer.observe(el);
     });
     return () => observer.disconnect();
-  }, []);
+  }, [lang, loaded]);
 
   return (
-    <>
+    <AppCtx.Provider value={{ theme, lang, t, toggleTheme, toggleLang }}>
+      <Cursor />
+
+      {!loaded && <Loader onDone={() => setLoaded(true)} />}
+
+      {/* Scroll progress bar */}
+      <div style={{
+        position: 'fixed', top: 0, insetInlineStart: 0,
+        height: '3px', width: `${scrollPct}%`,
+        background: 'linear-gradient(90deg, var(--accent), var(--teal))',
+        zIndex: 200, transition: 'width 0.1s linear',
+      }} />
+
       <Navbar />
       <main>
         <Hero />
@@ -42,12 +101,28 @@ function App() {
         <Skills />
         <Experience />
         <Projects />
-        <Stats />
-        <Germany />
         <Contact />
       </main>
       <Footer />
-    </>
+
+      {/* Back to top */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        style={{
+          position: 'fixed', bottom: '2rem', insetInlineEnd: '2rem',
+          width: '44px', height: '44px', borderRadius: '50%',
+          background: 'var(--accent)', color: '#fff', fontSize: '1.2rem',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 4px 20px rgba(139,124,248,0.4)', border: 'none',
+          cursor: 'pointer',
+          opacity: showTop ? 1 : 0,
+          transform: showTop ? 'translateY(0)' : 'translateY(12px)',
+          transition: 'opacity 0.3s, transform 0.3s',
+          pointerEvents: showTop ? 'auto' : 'none', zIndex: 150,
+        }}
+        aria-label="Back to top"
+      >↑</button>
+    </AppCtx.Provider>
   );
 }
 

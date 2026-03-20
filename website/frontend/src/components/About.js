@@ -1,77 +1,86 @@
-const About = () => (
-  <section id="about">
-    <div className="container">
-      <div className="section-head reveal">
-        <div className="label">01 — About</div>
-        <h2 className="section-title">
-          Who I <em>am</em>
-        </h2>
-      </div>
-      <div className="about-grid">
-        <div className="about-body reveal">
-          <p>
-            I'm a Lead Backend Engineer at <strong>Robotack</strong> in Amman,
-            Jordan, with a focus on building robust, scalable backend systems
-            using <strong>Java, Spring Boot, and microservices</strong>.
-          </p>
-          <p>
-            My work spans AI-powered chatbot platforms (Robochat), microfinance
-            systems (MFLP), and WhatsApp Business API integrations — all
-            requiring careful architecture, clean code, and zero tolerance for
-            production bugs.
-          </p>
-          <p>
-            I graduated from{' '}
-            <strong>
-              Jordan University of Science and Technology (JUST)
-            </strong>{' '}
-            and have been pushing the boundaries of what backend engineering
-            looks like at fast-moving product companies. I lead a team of four
-            developers while staying deeply hands-on with the code.
-          </p>
-          <p>
-            I'm actively planning a move to <strong>Germany</strong>, where I'm
-            excited to bring my skills to a new engineering culture and
-            larger-scale systems.
-          </p>
-        </div>
-        <div className="about-details reveal">
-          <div className="detail-row">
-            <div className="detail-label">Role</div>
-            <div className="detail-value">Lead Backend Engineer</div>
-          </div>
-          <div className="detail-row">
-            <div className="detail-label">Company</div>
-            <div className="detail-value">Robotack</div>
-          </div>
-          <div className="detail-row">
-            <div className="detail-label">Location</div>
-            <div className="detail-value">Amman, Jordan 🇯🇴</div>
-          </div>
-          <div className="detail-row">
-            <div className="detail-label">Education</div>
-            <div className="detail-value">B.Sc. — JUST</div>
-          </div>
-          <div className="detail-row">
-            <div className="detail-label">Languages</div>
-            <div className="detail-value">
-              Arabic (native) · English (fluent) · German (learning)
-            </div>
-          </div>
-          <div className="detail-row">
-            <div className="detail-label">Open to</div>
-            <div className="detail-value">Backend roles in Germany 🇩🇪</div>
-          </div>
-          <div className="detail-row">
-            <div className="detail-label">Email</div>
-            <div className="detail-value">
-              <a href="mailto:khaled@melhem.dev">khaled@melhem.dev</a>
-            </div>
-          </div>
-        </div>
-      </div>
+import { useApp } from '../App';
+
+const Terminal = ({ data }) => (
+  <div className="terminal">
+    <div className="terminal-bar">
+      <span className="t-dot" style={{ background: '#ff5f57' }} />
+      <span className="t-dot" style={{ background: '#febc2e' }} />
+      <span className="t-dot" style={{ background: '#28c840' }} />
+      <span className="t-title">khaled@melhem ~ profile.json</span>
     </div>
-  </section>
+    <div className="terminal-body">
+      <span className="t-brace">{'{'}</span>
+      {data.map(([key, val], i) => (
+        <div className="t-line" key={i}>
+          <span className="t-key">{'  '}&ldquo;{key}&rdquo;</span>
+          <span className="t-colon">: </span>
+          <span className="t-val">&ldquo;{val}&rdquo;</span>
+          {i < data.length - 1 && <span className="t-comma">,</span>}
+        </div>
+      ))}
+      <span className="t-brace">{'}'}</span>
+    </div>
+  </div>
 );
+
+const Avatar = () => (
+  <div className="avatar-wrap">
+    <div className="avatar">
+      <span className="avatar-initials">KM</span>
+    </div>
+    <div className="avatar-ring" />
+    <div className="avatar-status">
+      <span className="avatar-status-dot" />
+      Available
+    </div>
+  </div>
+);
+
+const About = () => {
+  const { t } = useApp();
+  const a = t.about;
+
+  const termData = [
+    [a.dRole,      a.dRoleVal],
+    [a.dCompany,   a.dCompanyVal],
+    [a.dLocation,  a.dLocationVal],
+    [a.dEducation, a.dEducationVal],
+    [a.dLangs,     a.dLangsVal],
+    [a.dOpen,      a.dOpenVal],
+    [a.dEmail,     a.dEmailVal],
+  ];
+
+  return (
+    <section id="about">
+      <div className="container">
+        <div className="about-inner">
+          <div className="reveal">
+            <Avatar />
+            <div className="label" style={{ marginBottom: '0.6rem', marginTop: '2rem' }}>{a.section}</div>
+            <h2 style={{
+              fontSize: 'clamp(2rem,5vw,3rem)',
+              fontWeight: 800,
+              lineHeight: 1.1,
+              letterSpacing: '-0.03em',
+              whiteSpace: 'pre-line',
+              marginBottom: '2rem',
+            }}>
+              {a.title}
+            </h2>
+            <div className="about-bio">
+              <p>{a.p1}</p>
+              <p>{a.p2}</p>
+              <p>{a.p3}</p>
+            </div>
+          </div>
+
+          <div className="reveal" data-delay="120">
+            <Terminal data={termData} />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
 export default About;

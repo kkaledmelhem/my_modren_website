@@ -1,102 +1,69 @@
-const Projects = () => (
-  <section id="projects">
-    <div className="container">
-      <div className="section-head reveal">
-        <div className="label">04 — Projects</div>
-        <h2 className="section-title">
-          What I've <em>shipped</em>
-        </h2>
-      </div>
-      <div className="projects-grid">
+import { useApp } from '../App';
+import { useRef } from 'react';
 
-        {/* Featured: Robochat */}
-        <div className="project-card featured reveal">
-          <div>
-            <div className="project-icon">🤖</div>
-            <div className="project-type">AI Platform · Flagship</div>
-            <div className="project-name">Robochat</div>
-            <p className="project-desc" style={{ marginTop: '0.6rem' }}>
-              A WhatsApp-integrated AI chatbot platform enabling businesses to
-              manage products, orders, and customer conversations at scale. Full
-              integration with WhatsApp Business API including catalog
-              management, order flows with tokens, Meta App Review, and
-              real-time notification systems.
-            </p>
-            <div className="project-tags" style={{ marginTop: '1.2rem' }}>
-              <span className="tag accent">Java</span>
-              <span className="tag accent">Spring Boot</span>
-              <span className="tag coral">WhatsApp API</span>
-              <span className="tag coral">Meta APIs</span>
-              <span className="tag">JPA</span>
-              <span className="tag">AJAX</span>
-              <span className="tag">Thymeleaf</span>
-            </div>
-          </div>
-          <div>
-            <ul className="project-highlights">
-              <li>WhatsApp catalog management — products, categories, variants</li>
-              <li>Order processing with flow tokens and state management</li>
-              <li>Real-time order notification system via AJAX polling</li>
-              <li>Custom HTML email notification templates with SQL-deployed updates</li>
-              <li>Meta App Review submission and verification</li>
-              <li>QR code image upload via SMB — resolved latency via connection pooling fix</li>
-              <li>Fixed production GROUP BY violations in DataTables order management UI</li>
-              <li>Resolved @SqlResultSetMapping issues in JPA native queries</li>
-            </ul>
-          </div>
-        </div>
+const TiltCard = ({ children, className }) => {
+  const ref = useRef(null);
 
-        {/* MFLP */}
-        <div className="project-card reveal">
-          <div className="project-icon">🏦</div>
-          <div className="project-type">Fintech Backend</div>
-          <div className="project-name">MFLP</div>
-          <p className="project-desc">
-            Microfinance Lending Platform — a fintech backend built for real
-            money and real accountability. Airtight transaction logic, data
-            integrity, and zero tolerance for bugs that affect financial
-            records.
-          </p>
-          <ul className="project-highlights">
-            <li>Loan lifecycle management with state machine patterns</li>
-            <li>Transaction integrity and audit trail design</li>
-            <li>Complex financial queries with JPA + native SQL</li>
-          </ul>
-          <div className="project-tags">
-            <span className="tag accent">Java</span>
-            <span className="tag accent">Spring Boot</span>
-            <span className="tag teal">PostgreSQL</span>
-            <span className="tag">JPA</span>
-            <span className="tag">Fintech</span>
-          </div>
-        </div>
+  const onMove = (e) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 14;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -14;
+    el.style.transform = `perspective(800px) rotateX(${y}deg) rotateY(${x}deg) translateY(-4px)`;
+    el.style.boxShadow = `${-x * 1.5}px ${y * 1.5}px 40px rgba(139,124,248,0.18)`;
+  };
 
-        {/* IDHPlatform CI/CD */}
-        <div className="project-card reveal">
-          <div className="project-icon">🔧</div>
-          <div className="project-type">DevOps / Platform</div>
-          <div className="project-name">IDHPlatform CI/CD</div>
-          <p className="project-desc">
-            Multi-phase CI/CD pipeline for a multi-module Maven project with
-            smart module detection, two approval gates, and Azure deployment.
-          </p>
-          <ul className="project-highlights">
-            <li>Smart module detection — rebuilds only what changed</li>
-            <li>UAT approval gate with manual sign-off</li>
-            <li>Production gate with rollback capability</li>
-            <li>Modules: generic.jar, auth.jar, business.jar, CMS, mobile-app</li>
-          </ul>
-          <div className="project-tags">
-            <span className="tag blue">Azure DevOps</span>
-            <span className="tag blue">Bitbucket</span>
-            <span className="tag">Maven</span>
-            <span className="tag">Multi-module</span>
-          </div>
-        </div>
+  const onLeave = (e) => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.transform = '';
+    el.style.boxShadow = '';
+  };
 
-      </div>
+  return (
+    <div
+      ref={ref}
+      className={className}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+    >
+      {children}
     </div>
-  </section>
-);
+  );
+};
+
+const Projects = () => {
+  const { t } = useApp();
+  const p = t.projects;
+
+  return (
+    <section id="projects">
+      <div className="container">
+        <div className="section-head reveal">
+          <div className="label">{p.section}</div>
+          <h2>{p.title}</h2>
+        </div>
+        <div className="projects-grid">
+          {p.items.map((proj, i) => (
+            <TiltCard
+              className={`project-card reveal${proj.featured ? ' featured' : ''}`}
+              key={i}
+            >
+              <div className="project-tag">{proj.tag}</div>
+              <div className="project-name">{proj.name}</div>
+              <p className="project-desc">{proj.desc}</p>
+              <div className="project-tech">
+                {proj.tech.map((tech) => (
+                  <span className="tag" key={tech}>{tech}</span>
+                ))}
+              </div>
+            </TiltCard>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
 
 export default Projects;
