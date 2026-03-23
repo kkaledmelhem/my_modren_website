@@ -14,9 +14,16 @@ import Cursor from './components/Cursor';
 import SocialBar from './components/SocialBar';
 import Stats from './components/Stats';
 import Germany from './components/Germany';
+import AIChat from './components/AIChat';
+import OpenToWork from './components/OpenToWork';
+import Testimonials from './components/Testimonials';
+import SkillsRadar from './components/SkillsRadar';
+import CaseStudies from './components/CaseStudies';
+import CaseStudyDetail from './components/CaseStudyDetail';
 import Blog from './components/Blog';
 import BlogPost from './components/BlogPost';
 import blogPosts from './data/blogPosts';
+import caseStudies from './data/caseStudies';
 
 export const AppCtx = createContext();
 export const useApp = () => useContext(AppCtx);
@@ -29,6 +36,8 @@ function App() {
   const [loaded, setLoaded]     = useState(false);
   // null = home, 'list' = blog list, string = post id
   const [blogView, setBlogView] = useState(null);
+  // null = home, 'list' = case study list, string = study id
+  const [caseStudyView, setCaseStudyView] = useState(null);
 
   const t = tr[lang];
 
@@ -87,21 +96,27 @@ function App() {
       observer.observe(el);
     });
     return () => observer.disconnect();
-  }, [lang, loaded, blogView]);
+  }, [lang, loaded, blogView, caseStudyView]);
 
   // Scroll to top when switching views
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [blogView]);
+  }, [blogView, caseStudyView]);
 
   const currentPost = typeof blogView === 'string'
     ? blogPosts.find((p) => p.id === blogView) || null
     : null;
 
+  const currentStudy = typeof caseStudyView === 'string'
+    ? caseStudies.find((s) => s.id === caseStudyView) || null
+    : null;
+
   return (
-    <AppCtx.Provider value={{ theme, lang, t, toggleTheme, toggleLang, blogView, setBlogView }}>
+    <AppCtx.Provider value={{ theme, lang, t, toggleTheme, toggleLang, blogView, setBlogView, caseStudyView, setCaseStudyView }}>
       <Cursor />
       <SocialBar />
+      <AIChat />
+      <OpenToWork />
 
       {!loaded && <Loader onDone={() => setLoaded(true)} />}
 
@@ -115,15 +130,18 @@ function App() {
 
       <Navbar />
 
-      {blogView === null && (
+      {blogView === null && caseStudyView === null && (
         <main>
           <Hero />
           <Stats />
           <About />
           <Skills />
+          <SkillsRadar />
           <Experience />
           <Germany />
           <Projects />
+          <CaseStudies onStudyClick={(id) => setCaseStudyView(id)} />
+          <Testimonials />
           <Contact />
         </main>
       )}
@@ -139,6 +157,21 @@ function App() {
           <BlogPost
             post={currentPost}
             onBack={() => setBlogView('list')}
+          />
+        </main>
+      )}
+
+      {caseStudyView === 'list' && (
+        <main>
+          <CaseStudies onStudyClick={(id) => setCaseStudyView(id)} />
+        </main>
+      )}
+
+      {currentStudy && (
+        <main>
+          <CaseStudyDetail
+            study={currentStudy}
+            onBack={() => setCaseStudyView('list')}
           />
         </main>
       )}

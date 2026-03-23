@@ -1,0 +1,55 @@
+/* ─────────────────────────────────────────
+   SKILLS RADAR
+───────────────────────────────────────── */
+#skills-radar { padding: 5rem 0; background: var(--bg2); }
+
+.radar-wrap { width: 100%; display: flex; justify-content: center; margin-top: 3rem; }
+
+.radar-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2.5rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 540px;
+  box-shadow: var(--shadow);
+  transition: background 0.3s, border-color 0.3s;
+}
+.radar-card:hover {
+  background: var(--card-hover);
+  border-color: rgba(139,124,248,0.25);
+}
+
+.radar-canvas {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  display: block;
+}
+
+.radar-legend {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.55rem 1.5rem;
+  width: 100%;
+  max-width: 380px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.radar-legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; }
+.radar-legend-dot { flex-shrink: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.radar-legend-label { color: var(--text); font-weight: 500; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.radar-legend-pct { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); flex-shrink: 0; }
+
+[dir='rtl'] .radar-legend-item { flex-direction: row-reverse; }
+
+@media (max-width: 480px) {
+  .radar-card { padding: 1.75rem 1rem 1.5rem; }
+  .radar-legend { grid-template-columns: 1fr; gap: 0.45rem; }
+}
