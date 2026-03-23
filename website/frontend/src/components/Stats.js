@@ -48,7 +48,7 @@ const Stats = () => (
           <div className="bc-label">Primary stack</div>
           <div
             className="bc-big"
-            style={{ color: 'var(--coral)', fontSize: '1.8rem' }}
+            style={{ color: 'var(--accent)', fontSize: '1.8rem' }}
           >
             Java ☕
           </div>
@@ -59,7 +59,7 @@ const Stats = () => (
           <div className="bc-label">Education</div>
           <div
             className="bc-big"
-            style={{ color: 'var(--text2)', fontSize: '1.4rem' }}
+            style={{ color: 'var(--text)', fontSize: '1.4rem' }}
           >
             JUST
           </div>

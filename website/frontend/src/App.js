@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import tr from './translations';
+import './blog.css';
 import Loader from './components/Loader';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -10,6 +11,12 @@ import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Cursor from './components/Cursor';
+import SocialBar from './components/SocialBar';
+import Stats from './components/Stats';
+import Germany from './components/Germany';
+import Blog from './components/Blog';
+import BlogPost from './components/BlogPost';
+import blogPosts from './data/blogPosts';
 
 export const AppCtx = createContext();
 export const useApp = () => useContext(AppCtx);
@@ -20,6 +27,8 @@ function App() {
   const [scrollPct, setScrollPct] = useState(0);
   const [showTop, setShowTop]   = useState(false);
   const [loaded, setLoaded]     = useState(false);
+  // null = home, 'list' = blog list, string = post id
+  const [blogView, setBlogView] = useState(null);
 
   const t = tr[lang];
 
@@ -78,11 +87,21 @@ function App() {
       observer.observe(el);
     });
     return () => observer.disconnect();
-  }, [lang, loaded]);
+  }, [lang, loaded, blogView]);
+
+  // Scroll to top when switching views
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [blogView]);
+
+  const currentPost = typeof blogView === 'string'
+    ? blogPosts.find((p) => p.id === blogView) || null
+    : null;
 
   return (
-    <AppCtx.Provider value={{ theme, lang, t, toggleTheme, toggleLang }}>
+    <AppCtx.Provider value={{ theme, lang, t, toggleTheme, toggleLang, blogView, setBlogView }}>
       <Cursor />
+      <SocialBar />
 
       {!loaded && <Loader onDone={() => setLoaded(true)} />}
 
@@ -95,14 +114,35 @@ function App() {
       }} />
 
       <Navbar />
-      <main>
-        <Hero />
-        <About />
-        <Skills />
-        <Experience />
-        <Projects />
-        <Contact />
-      </main>
+
+      {blogView === null && (
+        <main>
+          <Hero />
+          <Stats />
+          <About />
+          <Skills />
+          <Experience />
+          <Germany />
+          <Projects />
+          <Contact />
+        </main>
+      )}
+
+      {blogView === 'list' && (
+        <main>
+          <Blog onPostClick={(id) => setBlogView(id)} />
+        </main>
+      )}
+
+      {currentPost && (
+        <main>
+          <BlogPost
+            post={currentPost}
+            onBack={() => setBlogView('list')}
+          />
+        </main>
+      )}
+
       <Footer />
 
       {/* Back to top */}

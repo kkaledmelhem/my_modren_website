@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(NODE=\"/c/Users/HP/Desktop/khaled melhem/website/target/node/node.exe\")",
+      "Bash(\"$NODE\" node_modules/react-scripts/bin/react-scripts.js build)",
+      "Bash(where node:*)",
+      "Bash(where npm:*)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Program Files \\(x86\\)/**)"
+    ]
+  }
+}

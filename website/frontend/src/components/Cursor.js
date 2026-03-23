@@ -14,9 +14,9 @@ const Cursor = () => {
   useEffect(() => {
     if (isTouch()) return;
 
-    const DOT_SIZE  = 8;
-    const RING_SIZE = 36;
-    const LERP      = 0.18;   // ring follow speed — higher = snappier
+    const DOT_SIZE  = 6;
+    const RING_SIZE = 26;
+    const LERP      = 0.32;   // ring follow speed — higher = snappier
 
     const onMove = (e) => {
       mouse.current = { x: e.clientX, y: e.clientY };
@@ -58,15 +58,26 @@ const Cursor = () => {
       }
     };
 
+    const onClick = (e) => {
+      const ripple = document.createElement('div');
+      ripple.className = 'cursor-ripple';
+      ripple.style.left = e.clientX + 'px';
+      ripple.style.top  = e.clientY + 'px';
+      document.body.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    };
+
     window.addEventListener('mousemove', onMove, { passive: true });
     document.addEventListener('mouseover',  onEnter);
     document.addEventListener('mouseout',   onLeave);
+    window.addEventListener('mousedown',    onClick);
     raf.current = requestAnimationFrame(loop);
 
     return () => {
       window.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseover',  onEnter);
       document.removeEventListener('mouseout',   onLeave);
+      window.removeEventListener('mousedown',    onClick);
       cancelAnimationFrame(raf.current);
     };
   }, []);

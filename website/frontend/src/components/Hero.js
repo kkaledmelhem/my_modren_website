@@ -81,6 +81,67 @@ const MagneticBtn = ({ href, className, children }) => {
   );
 };
 
+const ParticleCanvas = () => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const section = canvas.closest('section');
+    let W = (canvas.width  = window.innerWidth);
+    let H = (canvas.height = section?.offsetHeight || window.innerHeight);
+
+    const COLORS = ['139,124,248', '52,211,153', '96,165,250'];
+    const particles = Array.from({ length: 60 }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.4 + 0.3,
+      vx: (Math.random() - 0.5) * 0.22,
+      vy: (Math.random() - 0.5) * 0.22,
+      o: Math.random() * 0.3 + 0.07,
+      c: COLORS[Math.floor(Math.random() * COLORS.length)],
+    }));
+
+    let raf;
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H);
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = W;
+        if (p.x > W) p.x = 0;
+        if (p.y < 0) p.y = H;
+        if (p.y > H) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${p.c},${p.o})`;
+        ctx.fill();
+      });
+      raf = requestAnimationFrame(draw);
+    };
+
+    const onResize = () => {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = canvas.closest('section')?.offsetHeight || window.innerHeight;
+    };
+    window.addEventListener('resize', onResize, { passive: true });
+    draw();
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', onResize);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}
+    />
+  );
+};
+
 const CodeWindow = () => (
   <div className="code-window">
     <div className="cw-bar">
@@ -124,6 +185,7 @@ const Hero = () => {
 
   return (
     <section id="hero">
+      <ParticleCanvas />
       <div className="hero-aurora" />
       <div className="hero-aurora hero-aurora-2" />
       <div className="hero-grid" />
@@ -153,6 +215,7 @@ const Hero = () => {
               <div className="hero-actions">
                 <MagneticBtn href="#contact" className="btn-primary">{h.cta}</MagneticBtn>
                 <MagneticBtn href="#projects" className="btn-ghost">{h.work}</MagneticBtn>
+                <a href="/Khaled_Melhem_Resume.pdf" download className="btn-cv">↓ CV</a>
               </div>
             </div>
           </div>
