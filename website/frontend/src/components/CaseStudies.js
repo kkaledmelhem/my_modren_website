@@ -1,5 +1,6 @@
 import { useApp } from '../App';
 import caseStudies from '../data/caseStudies';
+import './CaseStudies.css';
 
 const CaseStudies = ({ onStudyClick }) => {
   const { t } = useApp();
