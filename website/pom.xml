@@ -31,6 +31,16 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <!-- Activated by Railpack on Railway: skips React build (frontend is on Vercel) -->
+        <profile>
+            <id>production</id>
+            <properties>
+                <frontend.skip>true</frontend.skip>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <!-- Step 1: Build the React frontend -->
@@ -41,6 +51,7 @@
                 <configuration>
                     <workingDirectory>frontend</workingDirectory>
                     <installDirectory>target</installDirectory>
+                    <skip>${frontend.skip}</skip>
                 </configuration>
                 <executions>
                     <execution>
