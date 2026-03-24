@@ -1,9 +1,13 @@
 package com.khaledmelhem.website.controller;
 
 import com.khaledmelhem.website.model.ContactRequest;
+import com.khaledmelhem.website.model.ContactSubmission;
+import com.khaledmelhem.website.repository.ContactRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +24,32 @@ public class ContactController {
     private static final Logger logger = LoggerFactory.getLogger(ContactController.class);
     private final List<Map<String, Object>> messages = new ArrayList<>();
 
+    @Autowired(required = false)
+    private ContactRepository contactRepository;
+
     @PostMapping("/contact")
-    public ResponseEntity<Map<String, Object>> submitContact(@Valid @RequestBody ContactRequest request) {
+    public ResponseEntity<Map<String, Object>> submitContact(
+            @Valid @RequestBody ContactRequest request,
+            HttpServletRequest httpRequest) {
         logger.info("New contact message from: {} <{}>", request.getName(), request.getEmail());
+
+        if (contactRepository != null) {
+            ContactSubmission sub = new ContactSubmission();
+            sub.setName(request.getName());
+            sub.setEmail(request.getEmail());
+            sub.setSubject(request.getSubject());
+            sub.setMessage(request.getMessage());
+            sub.setPhone(request.getPhone());
+            sub.setIpAddress(httpRequest.getRemoteAddr());
+            contactRepository.save(sub);
+            logger.info("Saved contact submission to PostgreSQL, id: {}", sub.getId());
+
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "Thank you, " + request.getName() + "! Your message has been received. I'll get back to you shortly.",
+                    "id", sub.getId()
+            ));
+        }
 
         Map<String, Object> saved = Map.of(
                 "id", messages.size() + 1,

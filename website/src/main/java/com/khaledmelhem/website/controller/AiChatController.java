@@ -6,9 +6,12 @@ import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -124,19 +127,54 @@ public class AiChatController {
     @Value("${groq.api.key:}")
     private String groqApiKey;
 
+    @Autowired(required = false)
+    private StringRedisTemplate redis;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
     @PostMapping("/ai-chat")
-    public ResponseEntity<Map<String, String>> chat(@RequestBody Map<String, String> body) {
+    public ResponseEntity<Map<String, String>> chat(@RequestBody Map<String, String> body,
+                                                    HttpServletRequest httpRequest) {
         String message = body.getOrDefault("message", "").trim();
         String lang    = body.getOrDefault("lang", "en").trim();
 
         if (message.isEmpty()) {
             return ResponseEntity.badRequest()
                     .body(Map.of("reply", "Please provide a message."));
+        }
+
+        // Rate limiting: 10 requests per minute per IP
+        if (redis != null) {
+            String ip = httpRequest.getRemoteAddr();
+            String rateLimitKey = "rate:" + ip;
+            try {
+                String count = redis.opsForValue().get(rateLimitKey);
+                if (count != null && Integer.parseInt(count) >= 10) {
+                    return ResponseEntity.status(429)
+                        .body(Map.of("reply", "Too many requests. Please wait a moment before asking again."));
+                }
+                redis.opsForValue().increment(rateLimitKey);
+                redis.expire(rateLimitKey, Duration.ofMinutes(1));
+            } catch (Exception e) {
+                log.warn("Redis rate limit check failed: {}", e.getMessage());
+            }
+        }
+
+        // Cache lookup
+        String cacheKey = "chat:" + message.toLowerCase().trim() + ":" + lang;
+        if (redis != null) {
+            try {
+                String cached = redis.opsForValue().get(cacheKey);
+                if (cached != null) {
+                    log.info("Cache hit for message: {}", message.substring(0, Math.min(30, message.length())));
+                    return ResponseEntity.ok(Map.of("reply", cached));
+                }
+            } catch (Exception e) {
+                log.warn("Redis cache read failed: {}", e.getMessage());
+            }
         }
 
         // Use fallback if API key is not configured
@@ -147,6 +185,16 @@ public class AiChatController {
 
         try {
             String reply = callGroq(message, lang);
+
+            // Cache the reply
+            if (redis != null) {
+                try {
+                    redis.opsForValue().set(cacheKey, reply, Duration.ofHours(24));
+                } catch (Exception e) {
+                    log.warn("Redis cache write failed: {}", e.getMessage());
+                }
+            }
+
             return ResponseEntity.ok(Map.of("reply", reply));
         } catch (Exception e) {
             log.error("Groq API call failed: {}", e.getMessage(), e);
