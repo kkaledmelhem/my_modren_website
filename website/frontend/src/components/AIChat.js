@@ -12,6 +12,35 @@ const ERROR_MSG = {
   ar: 'عذراً، تعذّر الوصول إلى الخادم الآن. يمكنك مراسلة khadme9@gmail.com مباشرة.',
 };
 
+const SUGGESTIONS = {
+  en: [
+    'What does Khaled do?',
+    'What are his main skills?',
+    'What projects has he built?',
+  ],
+  ar: [
+    'ما هو عمل خالد؟',
+    'ما هي مهاراته الرئيسية؟',
+    'ما المشاريع التي بناها؟',
+  ],
+};
+
+/* ── Sparkle icon for the FAB when closed ── */
+const SparkleIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>
+  </svg>
+);
+
+/* ── X icon for the FAB when open ── */
+const CloseIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="2.5" strokeLinecap="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </svg>
+);
+
 const AIChat = () => {
   const { lang } = useApp();
   const [open, setOpen] = useState(false);
@@ -33,8 +62,8 @@ const AIChat = () => {
     if (open) setTimeout(() => inputRef.current?.focus(), 120);
   }, [open]);
 
-  const send = async () => {
-    const text = input.trim();
+  const send = async (overrideText) => {
+    const text = (overrideText ?? input).trim();
     if (!text || loading) return;
     setMessages((prev) => [...prev, { role: 'user', text }]);
     setInput('');
@@ -59,23 +88,36 @@ const AIChat = () => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
   };
 
+  const handleSuggestion = (text) => {
+    send(text);
+  };
+
   const isRtl = lang === 'ar';
+  /* Show suggestion chips only when there is exactly one message (the welcome) */
+  const showSuggestions = messages.length === 1;
 
   return (
     <>
+      {/* ── Pulse ring behind the FAB when closed ── */}
+      {!open && <span className="aichat-pulse-ring" />}
+
       <button
         className={`aichat-fab${open ? ' aichat-fab--open' : ''}`}
         onClick={() => setOpen((v) => !v)}
-        aria-label={open ? (lang === 'ar' ? 'إغلاق' : 'Close chat') : (lang === 'ar' ? 'تحدث مع AI' : 'Chat with AI')}
+        aria-label={open
+          ? (lang === 'ar' ? 'إغلاق' : 'Close chat')
+          : (lang === 'ar' ? 'اسأل عن خالد' : 'Ask about Khaled')}
       >
         {open ? (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
+          <CloseIcon />
         ) : (
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
+          <>
+            <SparkleIcon />
+            <span className="aichat-fab-label">
+              {lang === 'ar' ? 'اسأل عن خالد' : 'Ask about Khaled'}
+            </span>
+            <span className="aichat-fab-dot" aria-hidden="true" />
+          </>
         )}
       </button>
 
@@ -85,24 +127,44 @@ const AIChat = () => {
         aria-modal="true"
         dir={isRtl ? 'rtl' : 'ltr'}
       >
+        {/* Decorative gradient top line */}
+        <div className="aichat-top-bar" aria-hidden="true" />
+
         <div className="aichat-header">
-          <div className="aichat-header-avatar">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-            </svg>
-          </div>
+          {/* KM initials avatar */}
+          <div className="aichat-header-avatar">KM</div>
+
           <div className="aichat-header-info">
-            <span className="aichat-header-title">{lang === 'ar' ? 'AI خالد' : "Khaled's AI"}</span>
-            <span className="aichat-header-sub">{lang === 'ar' ? 'اسألني أي شيء' : 'Ask me anything'}</span>
+            <span className="aichat-header-title">
+              {lang === 'ar' ? 'مساعد خالد' : "Khaled's Assistant"}
+            </span>
+            <span className="aichat-header-sub">
+              <span className="aichat-online-dot" aria-hidden="true" />
+              {lang === 'ar' ? 'اسألني أي شيء عن خالد' : 'Ask me anything about Khaled'}
+            </span>
           </div>
+
           <div className="aichat-header-actions">
-            <button className="aichat-icon-btn" onClick={() => setMessages([{ role: 'assistant', text: WELCOME[lang] }])} aria-label="Clear">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
+            <button
+              className="aichat-icon-btn"
+              onClick={() => setMessages([{ role: 'assistant', text: WELCOME[lang] }])}
+              aria-label="Clear conversation"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="2.2" strokeLinecap="round">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14H6L5 6"/>
+                <path d="M10 11v6M14 11v6"/>
+                <path d="M9 6V4h6v2"/>
               </svg>
             </button>
-            <button className="aichat-icon-btn" onClick={() => setOpen(false)} aria-label="Close">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <button
+              className="aichat-icon-btn"
+              onClick={() => setOpen(false)}
+              aria-label="Close"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="2.5" strokeLinecap="round">
                 <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
               </svg>
             </button>
@@ -112,10 +174,28 @@ const AIChat = () => {
         <div className="aichat-messages">
           {messages.map((msg, i) => (
             <div key={i} className={`aichat-msg aichat-msg--${msg.role}`}>
-              {msg.role === 'assistant' && <div className="aichat-msg-avatar">K</div>}
+              {msg.role === 'assistant' && (
+                <div className="aichat-msg-avatar">K</div>
+              )}
               <div className="aichat-msg-bubble">{msg.text}</div>
             </div>
           ))}
+
+          {/* Suggestion chips — visible only before the user sends anything */}
+          {showSuggestions && !loading && (
+            <div className="aichat-suggestions">
+              {SUGGESTIONS[lang].map((s) => (
+                <button
+                  key={s}
+                  className="aichat-chip"
+                  onClick={() => handleSuggestion(s)}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          )}
+
           {loading && (
             <div className="aichat-msg aichat-msg--assistant">
               <div className="aichat-msg-avatar">K</div>
@@ -138,9 +218,16 @@ const AIChat = () => {
             onKeyDown={handleKey}
             disabled={loading}
           />
-          <button className="aichat-send-btn" onClick={send} disabled={loading || !input.trim()} aria-label="Send">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          <button
+            className="aichat-send-btn"
+            onClick={() => send()}
+            disabled={loading || !input.trim()}
+            aria-label="Send"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
             </svg>
           </button>
         </div>
