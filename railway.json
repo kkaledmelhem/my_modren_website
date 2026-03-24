@@ -1,6 +1,6 @@
 {
   "build": {
-    "buildCommand": "chmod +x mvnw && ./mvnw -B -DskipTests clean install -Pproduction && mkdir -p target && cp website/target/website-0.0.1-SNAPSHOT.jar target/"
+    "buildCommand": "chmod +x mvnw && ./mvnw -B -DskipTests clean install && mkdir -p target && cp website/target/website-0.0.1-SNAPSHOT.jar target/"
   },
   "deploy": {
     "startCommand": "java -jar target/website-0.0.1-SNAPSHOT.jar --server.port=$PORT"
