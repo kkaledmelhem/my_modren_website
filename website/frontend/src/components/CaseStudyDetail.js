@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useApp } from '../App';
+import ArchViz from './ArchViz';
 
 const CaseStudyDetail = ({ study, onBack }) => {
   const { t } = useApp();
@@ -77,6 +78,8 @@ const CaseStudyDetail = ({ study, onBack }) => {
               <span key={tech} className="cs-tech-tag">{tech}</span>
             ))}
           </div>
+
+          <ArchViz projectId={study.id} />
 
           <div className="bp-divider" />
 

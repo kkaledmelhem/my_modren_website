@@ -1,0 +1,367 @@
+/* ─────────────────────────────────────────
+   GITHUB ACTIVITY
+───────────────────────────────────────── */
+.gha-section {
+  padding: 7rem 0;
+  background: var(--bg2);
+}
+
+.gha-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  color: var(--text);
+  margin-top: 0.5rem;
+}
+
+/* ── Stats row ─────────────────────────────────────────────── */
+.gha-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 2.5rem 0 2.5rem;
+}
+
+.gha-stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+
+.gha-stat-card:hover {
+  border-color: var(--accent);
+  background: var(--card-hover);
+  transform: translateY(-3px);
+}
+
+.gha-stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.gha-stat-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+/* ── Error state ───────────────────────────────────────────── */
+.gha-error {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.gha-error-icon {
+  font-size: 2rem;
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.gha-error p {
+  color: var(--muted);
+  font-size: 0.95rem;
+  max-width: 420px;
+}
+
+.gha-gh-link {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.2s;
+}
+.gha-gh-link:hover { opacity: 0.75; }
+
+/* ── Heatmap ───────────────────────────────────────────────── */
+.gha-heatmap-wrap {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.6rem 1.8rem 1.2rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+}
+
+.gha-heatmap-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.gha-heatmap-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+
+.gha-heatmap-sublabel {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+/* The actual grid: 52 columns side by side */
+.gha-heatmap,
+.gha-heatmap-skeleton {
+  display: flex;
+  gap: 2px;
+  min-width: max-content;
+}
+
+.gha-heatmap-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ── Individual cells ── */
+.gh-cell {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  /* Start hidden; revealed by IntersectionObserver */
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.gh-cell--visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Colour intensities — all use --accent so they respect theme */
+.gh-cell--0 {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+}
+.gh-cell--1 { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+.gh-cell--2 { background: color-mix(in srgb, var(--accent) 60%, transparent); }
+.gh-cell--3 { background: var(--accent); }
+
+/* Fallback for browsers without color-mix (uses opacity layers) */
+@supports not (background: color-mix(in srgb, red 50%, transparent)) {
+  .gh-cell--1 { background: var(--accent); opacity: 0.28; }
+  .gh-cell--2 { background: var(--accent); opacity: 0.58; }
+}
+
+.gh-cell:hover {
+  outline: 1.5px solid var(--accent);
+  outline-offset: 1px;
+  cursor: default;
+}
+
+/* Skeleton cells */
+.gh-skeleton-cell {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  opacity: 1 !important;
+  transform: scale(1) !important;
+  animation: gha-pulse 1.6s ease-in-out infinite;
+}
+
+/* ── Legend ── */
+.gha-legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 0.75rem;
+  justify-content: flex-end;
+}
+
+[dir='rtl'] .gha-legend { justify-content: flex-start; }
+
+.gha-legend-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  margin: 0 2px;
+}
+
+/* ── Activity Feed ─────────────────────────────────────────── */
+.gha-feed-wrap {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.6rem 1.8rem;
+}
+
+.gha-feed-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.01em;
+}
+
+.gha-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Each feed item */
+.gha-feed-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+  animation-delay: var(--item-delay, 0ms);
+  transition: background 0.2s;
+}
+
+.gha-feed-item:last-child { border-bottom: none; }
+
+.gha-feed-item:hover {
+  background: var(--card-hover);
+  border-radius: 8px;
+  margin: 0 -0.5rem;
+  padding-inline: 0.5rem;
+}
+
+.gha-feed-icon {
+  font-size: 0.9rem;
+  color: var(--accent);
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+  padding-top: 2px;
+  line-height: 1;
+}
+
+.gha-feed-body {
+  flex: 1;
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.5;
+  min-width: 0;
+}
+
+.gha-feed-text {
+  color: var(--text);
+}
+
+.gha-feed-repo {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+  transition: opacity 0.2s;
+  word-break: break-all;
+}
+.gha-feed-repo:hover { opacity: 0.75; text-decoration: underline; text-underline-offset: 2px; }
+
+.gha-feed-time {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.gha-no-activity {
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding: 1rem 0;
+}
+
+/* "View profile" link */
+.gha-view-profile {
+  display: inline-block;
+  margin-top: 1.25rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.2s;
+}
+.gha-view-profile:hover { opacity: 0.72; }
+
+/* ── Skeleton shimmer ──────────────────────────────────────── */
+.gh-skeleton {
+  background: var(--bg3);
+  border-radius: 6px;
+  animation: gha-pulse 1.6s ease-in-out infinite;
+}
+
+.gh-skeleton--num   { width: 60px; height: 2rem; margin-bottom: 0.35rem; }
+.gh-skeleton--label { width: 90px; height: 0.65rem; }
+.gh-skeleton--sm    { width: 24px; height: 14px; }
+.gh-skeleton--md    { width: 100px; height: 14px; }
+.gh-skeleton--lg    { width: 180px; height: 14px; }
+
+.gh-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.gh-skeleton-row:last-child { border-bottom: none; }
+
+@keyframes gha-pulse {
+  0%, 100% { opacity: 0.45; }
+  50%       { opacity: 0.85; }
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 680px) {
+  .gha-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.65rem;
+  }
+
+  .gha-stat-card {
+    padding: 1rem 1rem;
+  }
+
+  .gha-stat-value { font-size: 1.5rem; }
+
+  .gha-heatmap-wrap {
+    padding: 1.2rem 1rem 0.9rem;
+  }
+
+  .gha-feed-wrap {
+    padding: 1.2rem 1rem;
+  }
+
+  .gha-feed-item:hover {
+    margin: 0;
+    padding-inline: 0;
+    background: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .gha-stats { grid-template-columns: 1fr 1fr; }
+  .gha-stats .gha-stat-card:last-child { grid-column: 1 / -1; }
+}

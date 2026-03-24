@@ -21,6 +21,8 @@ import CaseStudies from './components/CaseStudies';
 import CaseStudyDetail from './components/CaseStudyDetail';
 import Blog from './components/Blog';
 import BlogPost from './components/BlogPost';
+import GitHubActivity from './components/GitHubActivity';
+import ArchViz from './components/ArchViz';
 import blogPosts from './data/blogPosts';
 import caseStudies from './data/caseStudies';
 
@@ -138,8 +140,10 @@ function App() {
           <SkillsRadar />
           <Experience />
           <Projects />
+          <ArchViz />
           <CaseStudies onStudyClick={(id) => setCaseStudyView(id)} />
           <Testimonials />
+          <GitHubActivity />
           <Contact />
         </main>
       )}

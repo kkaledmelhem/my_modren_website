@@ -6,7 +6,8 @@
       "Bash(where node:*)",
       "Bash(where npm:*)",
       "Read(//c/Program Files/**)",
-      "Read(//c/Program Files \\(x86\\)/**)"
+      "Read(//c/Program Files \\(x86\\)/**)",
+      "WebSearch"
     ]
   }
 }

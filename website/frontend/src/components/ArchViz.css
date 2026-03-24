@@ -1,0 +1,138 @@
+/* ─────────────────────────────────────────
+   ARCH VIZ
+───────────────────────────────────────── */
+
+.archviz-wrap {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.archviz-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+  opacity: 0.85;
+}
+
+/* ── Canvas container — positions SVG + tooltip together ── */
+.archviz-canvas-wrap {
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: visible; /* allow tooltip to escape the box */
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+}
+
+.archviz-svg {
+  display: block;
+  width: 100%;
+  height: 220px;
+  border-radius: 14px;
+  overflow: hidden;
+  outline: none;
+}
+
+/* ── Node animation ── */
+.archviz-node {
+  cursor: pointer;
+  opacity: 0;
+  transform-origin: center;
+  transform-box: fill-box;
+  /* start state — handled by the rect transform in SVG space via CSS below */
+}
+
+.archviz-node rect,
+.archviz-node text {
+  transition:
+    stroke 0.2s ease,
+    stroke-width 0.2s ease,
+    stroke-opacity 0.2s ease;
+}
+
+/* Mount fade-in + scale, staggered via --delay */
+.archviz-node--in {
+  animation: archNodeIn 0.4s ease both;
+  animation-delay: var(--delay, 0ms);
+}
+
+@keyframes archNodeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Keep nodes visible after animation completes */
+.archviz-node--in {
+  opacity: 1; /* forward fill handled by animation-fill-mode: both */
+}
+
+/* ── Edge animation ── */
+.archviz-edge {
+  transition: stroke 0.2s ease, stroke-width 0.2s ease, stroke-opacity 0.2s ease;
+}
+
+.archviz-edge--hi {
+  stroke-dasharray: none;
+  filter: drop-shadow(0 0 3px var(--accent));
+}
+
+/* ── Tooltip ── */
+.archviz-tooltip {
+  position: absolute;
+  z-index: 20;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
+  width: 220px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  animation: tooltipIn 0.18s ease both;
+}
+
+@keyframes tooltipIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+.archviz-tooltip-text {
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--text);
+  margin: 0;
+}
+
+/* Little downward arrow pointing at the node */
+.archviz-tooltip-arrow {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 6px;
+  background: var(--bg3);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  border-top: 1px solid var(--border);
+}
+
+/* When tooltip appears below the node, flip the arrow */
+.archviz-tooltip.archviz-tooltip--above .archviz-tooltip-arrow {
+  bottom: auto;
+  top: -6px;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .archviz-svg {
+    height: 200px;
+  }
+}
