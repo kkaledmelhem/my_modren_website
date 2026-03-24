@@ -23,8 +23,8 @@ public class AiChatController {
 
     private static final Logger log = LoggerFactory.getLogger(AiChatController.class);
 
-    private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-    private static final String MODEL = "gpt-4o-mini";
+    private static final String GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
+    private static final String MODEL = "llama-3.1-8b-instant";
 
     private static final String SYSTEM_PROMPT =
         "You are the personal AI assistant embedded in Khaled Melhem's portfolio website. " +
@@ -97,8 +97,8 @@ public class AiChatController {
         Map.entry("متاح",       "خالد منفتح على فرص عمل كاملة في تطوير الواجهة الخلفية، سواء عن بُعد أو حضورياً.")
     );
 
-    @Value("${openai.api.key:}")
-    private String openaiApiKey;
+    @Value("${groq.api.key:}")
+    private String groqApiKey;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final HttpClient httpClient = HttpClient.newBuilder()
@@ -116,24 +116,23 @@ public class AiChatController {
         }
 
         // Use fallback if API key is not configured
-        if (openaiApiKey == null || openaiApiKey.isBlank()) {
-            log.warn("OPENAI_API_KEY is not set — using keyword fallback.");
+        if (groqApiKey == null || groqApiKey.isBlank()) {
+            log.warn("GROQ_API_KEY is not set — using keyword fallback.");
             return ResponseEntity.ok(Map.of("reply", buildFallbackReply(message, lang)));
         }
 
         try {
-            String reply = callOpenAI(message);
+            String reply = callGroq(message);
             return ResponseEntity.ok(Map.of("reply", reply));
         } catch (Exception e) {
-            log.error("OpenAI API call failed: {}", e.getMessage(), e);
+            log.error("Groq API call failed: {}", e.getMessage(), e);
             return ResponseEntity.ok(Map.of("reply", buildFallbackReply(message, lang)));
         }
     }
 
-    // ---------- OpenAI integration ----------
+    // ---------- Groq (free) integration ----------
 
-    private String callOpenAI(String userMessage) throws Exception {
-        // Build request JSON
+    private String callGroq(String userMessage) throws Exception {
         ObjectNode requestBody = objectMapper.createObjectNode();
         requestBody.put("model", MODEL);
         requestBody.put("max_tokens", 300);
@@ -152,18 +151,18 @@ public class AiChatController {
         String requestJson = objectMapper.writeValueAsString(requestBody);
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(OPENAI_URL))
+                .uri(URI.create(GROQ_URL))
                 .timeout(Duration.ofSeconds(30))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + openaiApiKey)
+                .header("Authorization", "Bearer " + groqApiKey)
                 .POST(HttpRequest.BodyPublishers.ofString(requestJson))
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() != 200) {
-            log.error("OpenAI returned HTTP {}: {}", response.statusCode(), response.body());
-            throw new RuntimeException("OpenAI API error: HTTP " + response.statusCode());
+            log.error("Groq returned HTTP {}: {}", response.statusCode(), response.body());
+            throw new RuntimeException("Groq API error: HTTP " + response.statusCode());
         }
 
         // Parse response: choices[0].message.content
@@ -171,7 +170,7 @@ public class AiChatController {
         JsonNode content = root.path("choices").path(0).path("message").path("content");
 
         if (content.isMissingNode() || content.isNull()) {
-            throw new RuntimeException("Unexpected OpenAI response structure");
+            throw new RuntimeException("Unexpected Groq response structure");
         }
 
         return content.asText().trim();
