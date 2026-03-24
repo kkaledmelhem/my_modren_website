@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+website/src/main/resources/static/static/
+website/src/main/resources/static/index.html
+website/src/main/resources/static/asset-manifest.json
