@@ -24,7 +24,7 @@ public class AiChatController {
     private static final Logger log = LoggerFactory.getLogger(AiChatController.class);
 
     private static final String GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-    private static final String MODEL = "llama-3.1-8b-instant";
+    private static final String MODEL = "llama-3.3-70b-versatile";
 
     private static final String SYSTEM_PROMPT =
         "You are the personal AI assistant on Khaled Melhem's portfolio website. Your only job is to answer questions about Khaled.\n\n" +
@@ -159,7 +159,7 @@ public class AiChatController {
     private String callGroq(String userMessage, String lang) throws Exception {
         ObjectNode requestBody = objectMapper.createObjectNode();
         requestBody.put("model", MODEL);
-        requestBody.put("max_tokens", 300);
+        requestBody.put("max_tokens", 500);
         requestBody.put("temperature", 0.7);
 
         ArrayNode messages = requestBody.putArray("messages");
