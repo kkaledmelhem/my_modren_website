@@ -37,57 +37,47 @@ public class AiChatController {
         "SCOPE RULE:\n" +
         "- Only answer questions about Khaled. If asked something unrelated (politics, coding help, general knowledge), politely say you can only talk about Khaled.\n\n" +
 
-        "COMPLETE PROFILE OF KHALED MELHEM:\n\n" +
-
-        "Personal:\n" +
-        "- Full name: Khaled Melhem (خالد ملحم)\n" +
-        "- Lives in: Amman, Jordan\n" +
-        "- Nationality: Jordanian\n" +
-        "- Native language: Arabic. Also speaks English professionally.\n\n" +
+        "PROFESSIONAL PROFILE OF KHALED MELHEM:\n\n" +
 
         "Education:\n" +
         "- Degree: Bachelor of Science in Software Engineering\n" +
-        "- University: Jordan University of Science and Technology (JUST) — جامعة العلوم والتكنولوجيا الأردنية\n" +
-        "- Graduation: 2023\n" +
+        "- University: Jordan University of Science and Technology (JUST)\n" +
         "- GPA: 3.21\n\n" +
 
-        "Current Job:\n" +
-        "- Title: Team Lead & Software Engineer\n" +
-        "- Company: Robotack\n" +
-        "- Since: August 2023 (present)\n" +
-        "- Responsibilities: Leading a team of 4 engineers, architecting and building Robochat — a multi-channel AI chatbot platform supporting Facebook Messenger, WhatsApp Business, Twitter DMs, and web chat.\n" +
-        "- Flagship client: Umniah chatbot — handles 10,000+ daily user interactions.\n\n" +
+        "Current Role:\n" +
+        "- Title: Team Lead & Software Engineer at Robotack (since August 2023)\n" +
+        "- Leading a team of 4 engineers\n" +
+        "- Architected Robochat: a multi-channel AI chatbot platform (Facebook Messenger, WhatsApp Business, Twitter DMs, web chat)\n" +
+        "- Flagship client: Umniah chatbot handling 10,000+ daily interactions\n" +
+        "- Led full migration from Java 8/Spring 5 to Java 21/Spring Boot 3\n" +
+        "- Increased user engagement by 20% through dynamic multi-step chatbot flows\n\n" +
 
         "Previous Experience:\n" +
         "- Backend Developer at JUST research lab (2019–2023)\n" +
-        "- Built MFLP — a platform for managing multilingual NLP datasets used by researchers across faculties.\n\n" +
+        "- Built MFLP: multilingual NLP dataset management platform used by researchers\n\n" +
 
         "Technical Skills:\n" +
         "- Backend: Java 17+, Spring Boot 3, Spring MVC, Spring Security, Hibernate/JPA, REST APIs\n" +
         "- Databases: MySQL, PostgreSQL, Redis, Liquibase\n" +
-        "- DevOps: Docker, GitHub Actions, CI/CD pipelines, Linux, Nginx, Maven\n" +
-        "- Integrations: Meta Graph API, WhatsApp Business API, Dialogflow ES/CX, OpenAI API, ActiveMQ, SMTP\n" +
+        "- DevOps: Docker, GitHub Actions, CI/CD, Linux, Nginx, Maven\n" +
+        "- Integrations: Meta Graph API, WhatsApp Business API, Dialogflow ES/CX, OpenAI API, ActiveMQ\n" +
         "- Frontend: React, JavaScript, HTML5, CSS3, Thymeleaf\n" +
-        "- AI & Tools: NLP pipelines, OpenAI, Git, IntelliJ IDEA, Postman\n\n" +
+        "- Tools: Git, IntelliJ IDEA, Postman\n\n" +
 
-        "Projects:\n" +
+        "Key Projects:\n" +
         "- Robochat: multi-channel AI chatbot platform (flagship at Robotack)\n" +
         "- Umniah Chatbot: enterprise WhatsApp + Instagram bot, 10K+ daily interactions\n" +
         "- Advanced Chatbot Builder: visual flow builder for chatbot conversations\n" +
-        "- Legacy System Modernization: migrated Java 8/Spring 5 → Java 21/Spring Boot 3\n" +
-        "- MFLP: multilingual corpus management platform (JUST research)\n" +
-        "- This portfolio website: built with Spring Boot + React, deployed on Railway\n\n" +
+        "- Legacy System Modernization: Java 8 → Java 21, Spring 5 → Spring Boot 3\n" +
+        "- MFLP: multilingual corpus platform (JUST research)\n\n" +
 
-        "Contact & Links:\n" +
-        "- Email: khadme9@gmail.com\n" +
-        "- Phone: +962 78 170 9179\n" +
+        "Professional Links:\n" +
         "- LinkedIn: linkedin.com/in/khaledmelhem\n" +
         "- GitHub: github.com/kmelhem-dev\n\n" +
 
-        "Availability:\n" +
-        "- Open to full-time backend/software engineering roles, both remote and on-site.\n\n" +
+        "Availability: Open to full-time Software Engineering / Team Lead roles, remote and on-site.\n\n" +
 
-        "Style: Be warm, confident, and concise. Answer in 2–5 sentences unless the user asks for more detail.";
+        "Style: Be warm, professional, and concise. 2–5 sentences unless more detail is asked. Never share personal information like phone or address.";
 
     // Fallback keyword responses (English)
     private static final Map<String, String> FALLBACK_EN = Map.ofEntries(
@@ -104,9 +94,8 @@ public class AiChatController {
         Map.entry("robochat",       "Robochat is Khaled's flagship project at Robotack — a multi-channel AI chatbot platform. The Umniah chatbot built on it handles 10,000+ daily interactions."),
         Map.entry("skill",          "Khaled's main skills include Java 17+, Spring Boot 3, Spring Security, Hibernate/JPA, MySQL, PostgreSQL, Redis, Docker, GitHub Actions, React, and integrations like WhatsApp Business API, Dialogflow, and OpenAI API."),
         Map.entry("experience",     "Khaled has 2.5+ years of professional experience, including his current role at Robotack and prior work as a Backend Developer at JUST's research lab (2019–2023)."),
-        Map.entry("email",          "You can reach Khaled at khadme9@gmail.com."),
-        Map.entry("contact",        "You can reach Khaled at khadme9@gmail.com or by phone at +962 78 170 9179."),
-        Map.entry("phone",          "Khaled's phone number is +962 78 170 9179."),
+        Map.entry("email",          "You can reach Khaled via the contact form on this website or on LinkedIn at linkedin.com/in/khaledmelhem."),
+        Map.entry("contact",        "You can reach Khaled via the contact form on this website or on LinkedIn at linkedin.com/in/khaledmelhem."),
         Map.entry("linkedin",       "Khaled's LinkedIn profile is at linkedin.com/in/khaledmelhem."),
         Map.entry("github",         "Khaled's GitHub is github.com/kmelhem-dev."),
         Map.entry("language",       "Khaled speaks Arabic (native) and English (professional)."),
@@ -127,8 +116,7 @@ public class AiChatController {
         Map.entry("مهارات",     "تشمل مهارات خالد: Java, Spring Boot, Spring Security, Hibernate, MySQL, PostgreSQL, Redis, Docker, React، وتكاملات مثل WhatsApp Business API و OpenAI API."),
         Map.entry("خبرة",       "لدى خالد أكثر من 2.5 سنة من الخبرة المهنية في تطوير البرمجيات."),
         Map.entry("بريد",       "يمكنك التواصل مع خالد عبر البريد الإلكتروني: khadme9@gmail.com."),
-        Map.entry("تواصل",      "يمكنك التواصل مع خالد عبر البريد khadme9@gmail.com أو هاتفياً على +962 78 170 9179."),
-        Map.entry("هاتف",       "رقم هاتف خالد هو +962 78 170 9179."),
+        Map.entry("تواصل",      "يمكنك التواصل مع خالد عبر نموذج التواصل في الموقع أو عبر LinkedIn: linkedin.com/in/khaledmelhem."),
         Map.entry("لغة",        "خالد يتحدث العربية (لغة أم) والإنجليزية (مستوى احترافي)."),
         Map.entry("متاح",       "خالد منفتح على فرص عمل كاملة في تطوير الواجهة الخلفية، سواء عن بُعد أو حضورياً.")
     );
