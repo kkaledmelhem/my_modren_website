@@ -13,7 +13,6 @@ import Footer from './components/Footer';
 import Cursor from './components/Cursor';
 import SocialBar from './components/SocialBar';
 import Stats from './components/Stats';
-import Germany from './components/Germany';
 import AIChat from './components/AIChat';
 import OpenToWork from './components/OpenToWork';
 import Testimonials from './components/Testimonials';
@@ -138,7 +137,6 @@ function App() {
           <Skills />
           <SkillsRadar />
           <Experience />
-          <Germany />
           <Projects />
           <CaseStudies onStudyClick={(id) => setCaseStudyView(id)} />
           <Testimonials />

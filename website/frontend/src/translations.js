@@ -11,7 +11,7 @@ const tr = {
       badge: 'Open to opportunities',
       firstName: 'Khaled',
       lastName: 'Melhem',
-      role: 'Lead Backend Engineer',
+      role: 'Team Lead · Software Engineer',
       location: 'Amman, Jordan',
       sub: 'I build production-grade microservices, AI-powered platforms, and systems that hold up under real pressure.',
       cta: 'Get in touch →',
@@ -30,7 +30,7 @@ const tr = {
       p2: "At Robotack, I architected Robochat — a multi-channel AI chatbot platform handling Facebook Messenger, WhatsApp Business, Twitter DMs, and web chat. I led a team of 4 engineers and owned the full technical stack from database design to API contracts.",
       p3: 'I hold a BS in Computer Information Systems from Jordan University of Science and Technology. I am passionate about clean architecture, performance, and systems that scale.',
       dRole: 'Role',
-      dRoleVal: 'Lead Backend Engineer',
+      dRoleVal: 'Team Lead · Software Engineer',
       dCompany: 'Company',
       dCompanyVal: 'Robotack',
       dLocation: 'Location',
@@ -61,7 +61,7 @@ const tr = {
       title: 'Where I have\nbeen doing it',
       items: [
         {
-          role: 'Software Developer',
+          role: 'Team Lead · Software Engineer',
           company: 'Robotack',
           period: 'Aug 2023 — Present',
           bullets: [
@@ -174,7 +174,7 @@ const tr = {
       badge: 'متاح للفرص الوظيفية',
       firstName: 'خالد',
       lastName: 'ملحم',
-      role: 'مهندس باك-إند أول',
+      role: 'قائد فريق · مهندس برمجيات',
       location: 'عمّان، الأردن',
       sub: 'أبني خدمات مصغّرة على مستوى الإنتاج، ومنصات مدعومة بالذكاء الاصطناعي، وأنظمة تصمد أمام الضغط الحقيقي.',
       cta: 'تواصل معي ←',
@@ -193,7 +193,7 @@ const tr = {
       p2: 'في شركة Robotack، صمّمت منصة Robochat — وهي منصة شات بوت متعددة القنوات تعمل على Facebook Messenger وWhatsApp Business وTwitter DMs والويب. قدتُ فريقاً من 4 مهندسين وتولّيتُ المسؤولية الكاملة للبنية التقنية.',
       p3: 'أحمل بكالوريوس في نظم المعلومات الحاسوبية من جامعة العلوم والتكنولوجيا الأردنية. شغوف بالبنية النظيفة والأداء والأنظمة القابلة للتوسع.',
       dRole: 'المسمى الوظيفي',
-      dRoleVal: 'مهندس باك-إند أول',
+      dRoleVal: 'قائد فريق · مهندس برمجيات',
       dCompany: 'الشركة',
       dCompanyVal: 'Robotack',
       dLocation: 'الموقع',
@@ -224,7 +224,7 @@ const tr = {
       title: 'أين أنجزتُ\nذلك',
       items: [
         {
-          role: 'مطوّر برمجيات',
+          role: 'قائد فريق · مهندس برمجيات',
           company: 'Robotack',
           period: 'أغسطس 2023 — حتى الآن',
           bullets: [

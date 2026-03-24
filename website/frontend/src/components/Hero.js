@@ -180,8 +180,8 @@ const Hero = () => {
   }, []);
 
   const roles = lang === 'ar'
-    ? ['مهندس باك-إند أول', 'متخصص Java', 'مهندس RESTful APIs', 'مهندس منصات AI']
-    : ['Lead Backend Engineer', 'Java Specialist', 'RESTful API Architect', 'AI Platform Builder'];
+    ? ['قائد فريق', 'مهندس برمجيات', 'متخصص Java', 'مهندس منصات AI']
+    : ['Team Lead', 'Software Engineer', 'Java Specialist', 'AI Platform Builder'];
 
   return (
     <section id="hero">
