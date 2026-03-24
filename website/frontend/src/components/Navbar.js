@@ -1,6 +1,54 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useApp } from '../App';
 
+const KmLogo = () => (
+  <svg
+    className="km-logo-svg"
+    width="36"
+    height="36"
+    viewBox="0 0 36 36"
+    xmlns="http://www.w3.org/2000/svg"
+    style={{ display: 'block', transition: 'transform 0.2s ease' }}
+  >
+    <defs>
+      <linearGradient id="km-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="var(--accent)" />
+        <stop offset="100%" stopColor="var(--teal)" />
+      </linearGradient>
+    </defs>
+    <circle cx="18" cy="18" r="17" fill="url(#km-grad)" />
+    <circle
+      className="km-ring"
+      cx="18"
+      cy="18"
+      r="17"
+      fill="none"
+      stroke="rgba(255,255,255,0.4)"
+      strokeWidth="1.5"
+    />
+    <text
+      x="11.5"
+      y="18"
+      fontFamily="var(--font)"
+      fontWeight="700"
+      fontSize="15"
+      fill="white"
+      textAnchor="middle"
+      dominantBaseline="central"
+    >K</text>
+    <text
+      x="24.5"
+      y="18"
+      fontFamily="var(--font)"
+      fontWeight="700"
+      fontSize="15"
+      fill="white"
+      textAnchor="middle"
+      dominantBaseline="central"
+    >M</text>
+  </svg>
+);
+
 const Navbar = () => {
   const { theme, lang, t, toggleTheme, toggleLang, blogView, setBlogView } = useApp();
   const [scrolled, setScrolled] = useState(false);
@@ -38,7 +86,7 @@ const Navbar = () => {
       <nav id="nav" className={scrolled ? 'scrolled' : ''}>
         <div className="nav-inner">
           <a className="nav-logo" href="#hero">
-            K<span>.</span>Melhem
+            <KmLogo />
           </a>
 
           <ul className="nav-links">

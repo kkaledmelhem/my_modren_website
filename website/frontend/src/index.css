@@ -176,6 +176,19 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   white-space: nowrap;
 }
 .nav-logo span { color: var(--accent); }
+@keyframes km-draw {
+  from { stroke-dashoffset: 107; }
+  to   { stroke-dashoffset: 0; }
+}
+.km-logo-svg circle.km-ring {
+  stroke-dasharray: 107;
+  stroke-dashoffset: 107;
+  animation: km-draw 1.2s ease-out 0.3s forwards;
+}
+.nav-logo:hover .km-logo-svg {
+  transform: scale(1.08);
+  transition: transform 0.2s ease;
+}
 .nav-links {
   display: flex;
   align-items: center;

@@ -22,6 +22,7 @@ import CaseStudyDetail from './components/CaseStudyDetail';
 import Blog from './components/Blog';
 import BlogPost from './components/BlogPost';
 import GitHubActivity from './components/GitHubActivity';
+import TechMarquee from './components/TechMarquee';
 import blogPosts from './data/blogPosts';
 import caseStudies from './data/caseStudies';
 
@@ -134,6 +135,7 @@ function App() {
         <main>
           <Hero />
           <Stats />
+          <TechMarquee />
           <About />
           <Skills />
           <SkillsRadar />

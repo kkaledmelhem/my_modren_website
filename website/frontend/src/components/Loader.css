@@ -1,0 +1,116 @@
+/* ── Loader overlay ─────────────────────────────────────────── */
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0a0a0f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.loader-overlay.fading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Terminal window ─────────────────────────────────────────── */
+.loader-win {
+  width: 90vw;
+  max-width: 640px;
+  border-radius: 12px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+
+/* ── Title bar ───────────────────────────────────────────────── */
+.loader-bar {
+  background: #1a1a24;
+  padding: 0.55rem 1rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.loader-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.loader-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.loader-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #666;
+  font-size: 0.75rem;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+
+/* ── Terminal body ───────────────────────────────────────────── */
+.loader-body {
+  background: #0d0d14;
+  padding: 1.5rem;
+  border-radius: 0 0 12px 12px;
+  min-height: 280px;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+/* ── Log lines ───────────────────────────────────────────────── */
+.loader-line {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.loader-prefix {
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+.loader-text {
+  color: #c8c8d8;
+  word-break: break-word;
+}
+
+/* ── Blinking cursor ─────────────────────────────────────────── */
+.loader-cursor {
+  color: #8b7cf8;
+  animation: blink 1s step-end infinite;
+  margin-left: 1px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── Progress bar ────────────────────────────────────────────── */
+.loader-progress-wrap {
+  margin-top: 1rem;
+  height: 3px;
+  background: #1a1a24;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loader-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #8b7cf8, #34d399);
+  border-radius: 2px;
+  transition: width 0.6s ease;
+  width: 0%;
+}
