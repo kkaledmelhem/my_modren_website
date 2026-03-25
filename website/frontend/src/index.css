@@ -1208,3 +1208,190 @@ footer {
   .germany-inner { grid-template-columns: 1fr; gap: 2.5rem; }
   #germany::before { display: none; }
 }
+
+/* ─────────────────────────────────────────
+   INTERACTIVE TIMELINE (Experience)
+───────────────────────────────────────── */
+#experience { padding: 6rem 0; }
+
+.tl-wrap {
+  position: relative;
+  margin-top: 3rem;
+}
+
+/* Vertical center line */
+.tl-wrap::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(to bottom, var(--accent), var(--teal));
+  opacity: 0.35;
+  border-radius: 2px;
+}
+
+/*
+  Desktop: 3-column grid  [card | dot | card]
+  tl-left  → card in col-1, dot in col-2, col-3 empty
+  tl-right → col-1 empty, dot in col-2, card in col-3
+*/
+.tl-item {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  align-items: start;
+  gap: 0 1.5rem;
+  padding: 2rem 0;
+}
+
+/* Node column always in the middle */
+.tl-center {
+  grid-column: 2;
+  display: flex;
+  justify-content: center;
+  padding-top: 1.4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.tl-node {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(139, 124, 248, 0.18);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  flex-shrink: 0;
+}
+
+.tl-item:hover .tl-node {
+  transform: scale(1.35);
+  box-shadow: 0 0 0 7px rgba(139, 124, 248, 0.22), 0 0 18px rgba(139, 124, 248, 0.4);
+}
+
+/* Card base */
+.tl-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.6rem;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.tl-item:hover .tl-card {
+  border-color: var(--accent);
+  background: var(--card-hover);
+  box-shadow: 0 8px 28px rgba(139, 124, 248, 0.12);
+}
+
+/* tl-left: card in col-1, center in col-2 (HTML order: center, card → reorder via grid) */
+.tl-left .tl-center { grid-column: 2; grid-row: 1; }
+.tl-left .tl-card   { grid-column: 1; grid-row: 1; }
+
+/* tl-right: center in col-2, card in col-3 */
+.tl-right .tl-center { grid-column: 2; grid-row: 1; }
+.tl-right .tl-card   { grid-column: 3; grid-row: 1; }
+
+/* Slide-in reveal animations */
+.tl-left.reveal:not(.visible) .tl-card  { opacity: 0; transform: translateX(-20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.tl-left.reveal.visible .tl-card        { opacity: 1; transform: translateX(0);     transition: opacity 0.6s ease, transform 0.6s ease; }
+.tl-right.reveal:not(.visible) .tl-card { opacity: 0; transform: translateX(20px);  transition: opacity 0.6s ease, transform 0.6s ease; }
+.tl-right.reveal.visible .tl-card       { opacity: 1; transform: translateX(0);     transition: opacity 0.6s ease, transform 0.6s ease; }
+
+.tl-date {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  border: 1px solid rgba(139, 124, 248, 0.3);
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  margin-bottom: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.tl-role {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+  line-height: 1.3;
+}
+
+.tl-company {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--teal);
+  margin-bottom: 1rem;
+}
+
+.tl-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tl-bullet {
+  position: relative;
+  padding-left: 1.3rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.tl-bullet::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  top: 0.06em;
+}
+
+/* ── Timeline Mobile ── */
+@media (max-width: 768px) {
+  .tl-wrap::before {
+    left: 7px;
+    transform: none;
+  }
+
+  .tl-item,
+  .tl-left,
+  .tl-right {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 0 1rem;
+    padding: 1.5rem 0;
+  }
+
+  .tl-center,
+  .tl-left .tl-center,
+  .tl-right .tl-center {
+    grid-column: 1;
+    grid-row: 1;
+    justify-content: flex-start;
+    padding-top: 1.1rem;
+  }
+
+  .tl-card,
+  .tl-left .tl-card,
+  .tl-right .tl-card {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  /* Reset slide animations to vertical on mobile */
+  .tl-left.reveal:not(.visible) .tl-card,
+  .tl-right.reveal:not(.visible) .tl-card {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  .tl-left.reveal.visible .tl-card,
+  .tl-right.reveal.visible .tl-card {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

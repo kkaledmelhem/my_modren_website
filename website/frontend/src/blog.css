@@ -194,6 +194,17 @@
   color: var(--text);
 }
 
+.bp-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--teal));
+  z-index: 9999;
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
 .bp-code-block {
   background: #0d0d1a;
   border-radius: var(--radius);
@@ -205,14 +216,44 @@
   background: #1a1a2e;
 }
 
+.bp-code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
 .bp-code-lang {
   font-family: var(--mono);
   font-size: 0.7rem;
   color: var(--muted);
-  padding: 0.5rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+}
+
+.bp-copy-btn {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 0.2rem 0.55rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  letter-spacing: 0.04em;
+}
+
+.bp-copy-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.bp-copy-btn.copied {
+  color: var(--teal);
+  border-color: var(--teal);
+  background: rgba(52, 211, 153, 0.08);
 }
 
 .bp-code-body {
@@ -261,10 +302,63 @@
   margin: 3rem auto 0;
   padding-top: 2rem;
   border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .bp-back-bottom {
   font-size: 0.9rem;
+  align-self: flex-start;
+}
+
+.bp-share {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.bp-share-label {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.bp-share-btns {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.bp-share-btn {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.bp-share-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.85;
+}
+
+.bp-share-x {
+  background: #000;
+  color: #fff;
+}
+
+[data-theme='light'] .bp-share-x {
+  background: #111;
+  color: #fff;
+}
+
+.bp-share-li {
+  background: #0077b5;
+  color: #fff;
 }
 
 /* ─────────────────────────────────────────
