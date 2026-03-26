@@ -1,4 +1,19 @@
-const Stats = () => (
+import { useState, useEffect } from 'react';
+
+const Stats = () => {
+  const [liveVisitors, setLiveVisitors] = useState(null);
+
+  useEffect(() => {
+    // Record this visit
+    fetch('/api/visit', { method: 'POST' }).catch(() => {});
+    // Fetch visitor stats
+    fetch('/api/stats')
+      .then(r => r.json())
+      .then(d => setLiveVisitors(d.visitors))
+      .catch(() => {});
+  }, []);
+
+  return (
   <section id="stats">
     <div className="container">
       <div className="bento-grid">
@@ -51,9 +66,18 @@ const Stats = () => (
           <div className="bc-sub">Computer Engineering, Jordan</div>
         </div>
 
+        <div className="bento-card reveal">
+          <div className="bc-label">Site Visits</div>
+          <div className="bc-big" style={{ color: 'var(--teal)', fontSize: '2rem' }}>
+            {liveVisitors !== null ? liveVisitors.toLocaleString() + '+' : '…'}
+          </div>
+          <div className="bc-sub">Live visitor count</div>
+        </div>
+
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default Stats;

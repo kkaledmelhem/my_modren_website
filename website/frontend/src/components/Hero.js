@@ -297,5 +297,4 @@ export default function Hero({ recruiterMode }) {
       </div>
     </section>
   );
-};
-
+}

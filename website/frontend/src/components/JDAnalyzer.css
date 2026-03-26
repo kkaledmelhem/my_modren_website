@@ -289,3 +289,23 @@
     justify-content: center;
   }
 }
+
+.jda-pdf-btn {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+  background: linear-gradient(135deg, rgba(139,124,248,0.15), rgba(52,211,153,0.15));
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.jda-pdf-btn:hover:not(:disabled) {
+  background: var(--accent);
+  color: white;
+}
+.jda-pdf-btn:disabled { opacity: 0.5; cursor: not-allowed; }

@@ -70,6 +70,7 @@ const JDAnalyzer = () => {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError]   = useState('');
+  const [resumeLoading, setResumeLoading] = useState(false);
 
   const analyze = async () => {
     if (!jd.trim() || loading) return;
@@ -89,6 +90,75 @@ const JDAnalyzer = () => {
       setError(lang === 'ar' ? 'فشل التحليل. حاول مرة أخرى.' : 'Analysis failed. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const downloadResume = async () => {
+    setResumeLoading(true);
+    try {
+      const res = await fetch('/api/tailor-resume', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jobDescription: jd }),
+      });
+      const data = await res.json();
+      // Build HTML resume
+      const html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>${data.name} — Resume</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Georgia', serif; color: #1a1a1a; padding: 48px; max-width: 800px; margin: auto; }
+  h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; }
+  .title { font-size: 1.1rem; color: #5b21b6; margin: 4px 0 24px; font-family: monospace; }
+  .summary { font-size: 0.95rem; line-height: 1.7; color: #374151; border-left: 3px solid #8b7cf8; padding-left: 16px; margin-bottom: 32px; }
+  h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; color: #8b7cf8; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px; margin-bottom: 16px; margin-top: 28px; }
+  .job { margin-bottom: 20px; }
+  .job-header { display: flex; justify-content: space-between; align-items: baseline; }
+  .company { font-weight: 700; font-size: 1rem; }
+  .role { color: #6b7280; font-size: 0.9rem; }
+  .period { font-size: 0.85rem; color: #9ca3af; font-family: monospace; }
+  ul { margin-top: 8px; padding-left: 20px; }
+  li { font-size: 0.9rem; line-height: 1.6; color: #374151; margin-bottom: 4px; }
+  .skills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .skill { background: #f3f0ff; color: #5b21b6; border-radius: 4px; padding: 4px 10px; font-size: 0.8rem; font-family: monospace; }
+  .edu { font-size: 0.9rem; color: #374151; }
+  @media print { body { padding: 24px; } }
+</style>
+</head>
+<body>
+  <h1>${data.name}</h1>
+  <div class="title">${data.title}</div>
+  <div class="summary">${data.summary}</div>
+  <h2>Experience</h2>
+  ${(data.experiences || []).map(exp => `
+    <div class="job">
+      <div class="job-header">
+        <div><span class="company">${exp.company}</span> · <span class="role">${exp.role}</span></div>
+        <span class="period">${exp.period}</span>
+      </div>
+      <ul>${(exp.bullets || []).map(b => `<li>${b}</li>`).join('')}</ul>
+    </div>
+  `).join('')}
+  <h2>Skills</h2>
+  <div class="skills">${(data.skills || []).map(s => `<span class="skill">${s}</span>`).join('')}</div>
+  <h2>Education</h2>
+  <div class="edu">${data.education}</div>
+</body>
+</html>`;
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Khaled_Melhem_Resume_Tailored.html';
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      // silently fail
+    } finally {
+      setResumeLoading(false);
     }
   };
 
@@ -184,6 +254,12 @@ const JDAnalyzer = () => {
                 {l.tryAnother}
               </button>
             </div>
+
+            {result && (
+              <button className="jda-pdf-btn" onClick={downloadResume} disabled={resumeLoading}>
+                {resumeLoading ? 'Generating…' : '⬇ Download Tailored Resume'}
+              </button>
+            )}
           </div>
         )}
       </div>
