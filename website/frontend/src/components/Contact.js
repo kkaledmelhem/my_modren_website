@@ -47,7 +47,8 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact">
+    <section id="contact" style={{ position: 'relative', overflow: 'hidden' }}>
+      <div className="contact-section-bg" />
       <div className="container">
         <div className="contact-inner">
           <div className="reveal">
@@ -57,10 +58,13 @@ const Contact = () => {
               <br />
               {c.title.split('\n')[1]}
             </h2>
+            <p className="contact-response-time">&#9679; Usually responds within 24h</p>
             <p className="contact-body">{c.body}</p>
             <div className="contact-cards">
               <a className="contact-card" href={`mailto:${c.email}`}>
-                <div className="cc-icon">✉️</div>
+                <div className="cc-icon-wrap" style={{ '--cc-color': '#8b7cf8' }}>
+                  <span className="cc-icon">✉️</span>
+                </div>
                 <div>
                   <div className="cc-label">Email</div>
                   <div className="cc-value">{c.email}</div>
@@ -72,7 +76,9 @@ const Contact = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <div className="cc-icon">💬</div>
+                <div className="cc-icon-wrap" style={{ '--cc-color': '#25d366' }}>
+                  <span className="cc-icon">💬</span>
+                </div>
                 <div>
                   <div className="cc-label">WhatsApp</div>
                   <div className="cc-value">{c.phone}</div>
@@ -82,7 +88,9 @@ const Contact = () => {
                 className="contact-card"
                 href={`tel:${c.phone.replace(/\s/g, '')}`}
               >
-                <div className="cc-icon">📞</div>
+                <div className="cc-icon-wrap" style={{ '--cc-color': '#34d399' }}>
+                  <span className="cc-icon">📞</span>
+                </div>
                 <div>
                   <div className="cc-label">Phone</div>
                   <div className="cc-value">{c.phone}</div>
@@ -94,7 +102,9 @@ const Contact = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <div className="cc-icon">💼</div>
+                <div className="cc-icon-wrap" style={{ '--cc-color': '#0077b5' }}>
+                  <span className="cc-icon">💼</span>
+                </div>
                 <div>
                   <div className="cc-label">LinkedIn</div>
                   <div className="cc-value">{c.linkedin}</div>
@@ -106,7 +116,9 @@ const Contact = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <div className="cc-icon">🐙</div>
+                <div className="cc-icon-wrap" style={{ '--cc-color': '#6e7681' }}>
+                  <span className="cc-icon">🐙</span>
+                </div>
                 <div>
                   <div className="cc-label">GitHub</div>
                   <div className="cc-value">{c.github}</div>
@@ -174,7 +186,8 @@ const Contact = () => {
               type="submit"
               disabled={status === 'loading'}
             >
-              {status === 'loading' ? f.sending : f.send}
+              <span>{status === 'loading' ? f.sending : f.send}</span>
+              <span className="form-submit-arrow">&#8594;</span>
             </button>
           </form>
         </div>

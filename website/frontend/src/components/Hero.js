@@ -166,6 +166,10 @@ const CodeWindow = () => (
       <div className="cw-line cw-indent"><span className="cw-punc">{'}'}</span></div>
       <div className="cw-line"><span className="cw-punc">{'}'}</span></div>
     </div>
+    <div className="cw-status-bar">
+      <span className="cw-status-dot" />
+      Spring Boot 3 &middot; Java 21 &middot; Running on :8080
+    </div>
   </div>
 );
 
@@ -194,13 +198,21 @@ const Hero = () => {
         <div className="hero-inner">
           <div>
             <div className={`hero-line hero-line-1${loaded ? ' in' : ''}`}>
-              <div className="hero-badge">{h.badge}</div>
+              <div className="hero-badge-new">
+                <span className="hero-badge-dot" />
+                {h.badge}
+              </div>
             </div>
             <div className={`hero-line hero-line-2${loaded ? ' in' : ''}`}>
               <h1 className="hero-h1">
                 {h.firstName}
                 <br />
-                <em>{h.lastName}</em>
+                <em style={{
+                  background: 'linear-gradient(135deg, var(--accent), var(--teal))',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}>{h.lastName}</em>
               </h1>
             </div>
             <div className={`hero-line hero-line-3${loaded ? ' in' : ''}`}>
@@ -224,21 +236,21 @@ const Hero = () => {
             <div className="hero-right">
               <CodeWindow />
               <div className="hero-stats-row">
-                <div className="hero-stat-card">
+                <div className="hero-stat-card" style={{ backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.04)' }}>
                   <div className="stat-icon">⚡</div>
                   <div>
                     <CountUp value={h.stat1Num} color="var(--accent)" />
                     <div className="stat-desc">{h.stat1Label}</div>
                   </div>
                 </div>
-                <div className="hero-stat-card">
+                <div className="hero-stat-card" style={{ backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.04)' }}>
                   <div className="stat-icon">🚀</div>
                   <div>
                     <CountUp value={h.stat2Num} color="var(--teal)" />
                     <div className="stat-desc">{h.stat2Label}</div>
                   </div>
                 </div>
-                <div className="hero-stat-card">
+                <div className="hero-stat-card" style={{ backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.04)' }}>
                   <div className="stat-icon">👥</div>
                   <div>
                     <CountUp value={h.stat3Num} color="var(--blue)" />
@@ -249,6 +261,10 @@ const Hero = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="hero-scroll-hint">
+        <div className="hero-scroll-line" />
+        <span>scroll</span>
       </div>
     </section>
   );
