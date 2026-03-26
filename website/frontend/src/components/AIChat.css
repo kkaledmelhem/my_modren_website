@@ -408,6 +408,46 @@
 .aichat-send-btn:hover:not(:disabled) { opacity: 0.88; transform: scale(1.05); }
 .aichat-send-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
+/* ── Active state for icon buttons (voice toggle) ── */
+.aichat-icon-btn--active {
+  color: var(--accent) !important;
+}
+
+/* ── Mic button ── */
+.aichat-mic-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.aichat-mic-btn:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.aichat-mic-btn--recording {
+  color: #ef4444 !important;
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.08) !important;
+  animation: mic-pulse 1.2s infinite ease-in-out;
+}
+
+.aichat-mic-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+@keyframes mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.35); }
+  50%       { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+}
+
 /* ── Mobile ── */
 @media (max-width: 500px) {
   .aichat-window {

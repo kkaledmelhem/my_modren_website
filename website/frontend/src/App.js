@@ -23,6 +23,8 @@ import Blog from './components/Blog';
 import BlogPost from './components/BlogPost';
 import GitHubActivity from './components/GitHubActivity';
 import TechMarquee from './components/TechMarquee';
+import HackerTerminal from './components/HackerTerminal';
+import JDAnalyzer from './components/JDAnalyzer';
 import blogPosts from './data/blogPosts';
 import caseStudies from './data/caseStudies';
 
@@ -39,6 +41,9 @@ function App() {
   const [blogView, setBlogView] = useState(null);
   // null = home, 'list' = case study list, string = study id
   const [caseStudyView, setCaseStudyView] = useState(null);
+  // Hacker terminal easter egg
+  const [terminalOpen, setTerminalOpen] = useState(false);
+  const [showTerminalHint, setShowTerminalHint] = useState(false);
 
   const t = tr[lang];
 
@@ -104,6 +109,33 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [blogView, caseStudyView]);
 
+  // ── Hacker terminal: open on "/" keypress (when not typing in an input) ──
+  useEffect(() => {
+    const onKey = (e) => {
+      if (terminalOpen && e.key === 'Escape') { setTerminalOpen(false); return; }
+      if (e.key !== '/') return;
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement?.isContentEditable) return;
+      e.preventDefault();
+      setTerminalOpen(true);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [terminalOpen]);
+
+  // Show the "/" hint toast once after the loader finishes
+  useEffect(() => {
+    if (!loaded) return;
+    const seen = sessionStorage.getItem('km-terminal-hint');
+    if (seen) return;
+    const timer = setTimeout(() => {
+      setShowTerminalHint(true);
+      sessionStorage.setItem('km-terminal-hint', '1');
+      setTimeout(() => setShowTerminalHint(false), 3800);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [loaded]);
+
   const currentPost = typeof blogView === 'string'
     ? blogPosts.find((p) => p.id === blogView) || null
     : null;
@@ -118,6 +150,16 @@ function App() {
       <SocialBar />
       <AIChat />
       <OpenToWork />
+
+      {/* Hacker Terminal easter egg */}
+      {terminalOpen && <HackerTerminal onClose={() => setTerminalOpen(false)} />}
+
+      {/* Hint toast — shown once after load */}
+      {showTerminalHint && (
+        <div className="ht-hint-toast">
+          Press <kbd style={{ fontFamily: 'var(--mono)', background: 'rgba(255,255,255,0.08)', padding: '0 5px', borderRadius: '4px' }}>/</kbd> to open the developer terminal
+        </div>
+      )}
 
       {!loaded && <Loader onDone={() => setLoaded(true)} />}
 
@@ -144,6 +186,7 @@ function App() {
           <CaseStudies onStudyClick={(id) => setCaseStudyView(id)} />
           <Testimonials />
           <GitHubActivity />
+          <JDAnalyzer />
           <Contact />
         </main>
       )}
