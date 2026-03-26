@@ -2233,3 +2233,32 @@ footer {
   color: var(--accent);
   margin-top: 8px;
 }
+
+/* ── 3am Build — The honest version ── */
+body.three-am-mode {
+  --bg: #020208;
+  --bg2: #05050f;
+  --bg3: #08081a;
+  --accent: #6c5ce7;
+  --teal: #00b894;
+}
+/* Show a special midnight banner at top of page */
+body.three-am-mode::before {
+  content: "🌙 You're up late. Let's skip the marketing. This is the real version.";
+  display: block;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9999;
+  background: linear-gradient(90deg, #2d1b69, #0d0d1a);
+  color: rgba(255,255,255,0.85);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  padding: 6px 16px;
+  text-align: center;
+  border-bottom: 1px solid rgba(108,92,231,0.4);
+}
+/* Push navbar down 32px in 3am mode */
+body.three-am-mode nav {
+  top: 32px !important;
+}

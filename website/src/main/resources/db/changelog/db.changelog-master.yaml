@@ -84,3 +84,35 @@ databaseChangeLog:
             columns:
               - column:
                   name: event_type
+
+  - changeSet:
+      id: 3-create-visitor-words
+      author: khaled
+      changes:
+        - createTable:
+            tableName: visitor_words
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: word
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ip_hash
+                  type: VARCHAR(64)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: approved
+                  type: BOOLEAN
+                  defaultValueBoolean: true

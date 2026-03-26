@@ -50,9 +50,19 @@ const KmLogo = () => (
 );
 
 const Navbar = () => {
-  const { theme, lang, t, toggleTheme, toggleLang, blogView, setBlogView } = useApp();
+  const { theme, lang, t, toggleTheme, toggleLang, blogView, setBlogView, specialView, setSpecialView } = useApp();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [exploreOpen, setExploreOpen] = useState(false);
+
+  const exploreItems = [
+    { key: 'question',      label: '? Question of the Month' },
+    { key: 'relocation',    label: '✈ Relocation Map' },
+    { key: 'career-graph',  label: '◎ Career Graph' },
+    { key: 'escape-room',   label: '⌨ Escape Room' },
+    { key: 'incident-board',label: '⚡ Incident Board' },
+    { key: 'futures',       label: '◈ Futures Market' },
+  ];
 
   const sectionIds = ['about', 'skills', 'experience', 'projects'];
   const navLabels = [t.nav.about, t.nav.skills, t.nav.experience, t.nav.projects];
@@ -103,11 +113,59 @@ const Navbar = () => {
             <li>
               <button
                 className={`nav-toggle nav-blog-btn${blogView !== null ? ' nav-blog-active' : ''}`}
-                onClick={() => setBlogView(blogView !== null ? null : 'list')}
+                onClick={() => { setBlogView(blogView !== null ? null : 'list'); setSpecialView(null); }}
               >
                 {blogView !== null ? '← Home' : (lang === 'ar' ? 'المدوّنة' : 'Blog')}
               </button>
             </li>
+            {(blogView === null && specialView === null) && (
+              <li style={{ position: 'relative' }}>
+                <button
+                  className="nav-toggle"
+                  onClick={() => setExploreOpen((o) => !o)}
+                  style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+                >
+                  Explore {exploreOpen ? '▲' : '▼'}
+                </button>
+                {exploreOpen && (
+                  <ul style={{
+                    position: 'absolute', top: '110%', right: 0,
+                    background: 'var(--surface)', border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: '10px', padding: '0.5rem 0', minWidth: '200px',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.4)', zIndex: 300,
+                    listStyle: 'none', margin: 0,
+                  }}>
+                    {exploreItems.map((item) => (
+                      <li key={item.key}>
+                        <button
+                          onClick={() => { setSpecialView(item.key); setExploreOpen(false); }}
+                          style={{
+                            width: '100%', textAlign: 'left', background: 'none',
+                            border: 'none', color: 'var(--fg)', padding: '0.5rem 1rem',
+                            cursor: 'pointer', fontSize: '0.85rem', fontFamily: 'var(--mono)',
+                            transition: 'background 0.15s',
+                          }}
+                          onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.05)'}
+                          onMouseLeave={(e) => e.target.style.background = 'none'}
+                        >
+                          {item.label}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            )}
+            {specialView !== null && (
+              <li>
+                <button
+                  className="nav-toggle nav-blog-btn nav-blog-active"
+                  onClick={() => setSpecialView(null)}
+                >
+                  ← Home
+                </button>
+              </li>
+            )}
           </ul>
 
           <div className="nav-controls">
@@ -139,10 +197,29 @@ const Navbar = () => {
         <button
           className="nav-toggle"
           style={{ textAlign: 'start', padding: '0.6rem 0' }}
-          onClick={() => { setBlogView(blogView !== null ? null : 'list'); close(); }}
+          onClick={() => { setBlogView(blogView !== null ? null : 'list'); setSpecialView(null); close(); }}
         >
           {blogView !== null ? '← Home' : (lang === 'ar' ? 'المدوّنة' : 'Blog')}
         </button>
+        {blogView === null && specialView === null && exploreItems.map((item) => (
+          <button
+            key={item.key}
+            className="nav-toggle"
+            style={{ textAlign: 'start', padding: '0.4rem 0', fontSize: '0.85rem', fontFamily: 'var(--mono)' }}
+            onClick={() => { setSpecialView(item.key); close(); }}
+          >
+            {item.label}
+          </button>
+        ))}
+        {specialView !== null && (
+          <button
+            className="nav-toggle"
+            style={{ textAlign: 'start', padding: '0.6rem 0' }}
+            onClick={() => { setSpecialView(null); close(); }}
+          >
+            ← Home
+          </button>
+        )}
         <div className="mob-controls">
           <button className="nav-toggle" onClick={() => { toggleTheme(); close(); }}>{themeIcon}</button>
           <button className="nav-toggle" onClick={() => { toggleLang(); close(); }}>{langLabel}</button>

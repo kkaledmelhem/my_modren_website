@@ -1,0 +1,327 @@
+/* ─────────────────────────────────────────
+   WALL OF MINDS
+───────────────────────────────────────── */
+
+.wom-section {
+  padding: 6rem 0 7rem;
+  background: var(--bg);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.wom-section.wom-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Section header ─────────────────────── */
+.wom-head {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.wom-title {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-top: 0.6rem;
+  color: var(--text);
+}
+
+.wom-title span {
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Input zone ─────────────────────────── */
+.wom-input-zone {
+  max-width: 560px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.wom-prompt {
+  font-size: 1.05rem;
+  color: var(--muted);
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.01em;
+}
+
+.wom-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.wom-field-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.wom-input {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.85rem 3rem 0.85rem 1.2rem;
+  font-family: var(--font);
+  font-size: 1rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.wom-input::placeholder {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.wom-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(139, 124, 248, 0.15);
+}
+
+.wom-input--error {
+  border-color: #f87171;
+}
+
+.wom-input--error:focus {
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.15);
+}
+
+.wom-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.wom-char-count {
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  pointer-events: none;
+  letter-spacing: 0.05em;
+}
+
+.wom-error {
+  font-size: 0.8rem;
+  color: #f87171;
+  letter-spacing: 0.01em;
+  margin-top: -0.2rem;
+}
+
+.wom-btn {
+  background: linear-gradient(135deg, var(--accent), #6d28d9);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.75rem 2rem;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(139, 124, 248, 0.3);
+}
+
+.wom-btn:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 26px rgba(139, 124, 248, 0.45);
+}
+
+.wom-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.wom-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Submitted banner ───────────────────── */
+.wom-submitted-banner {
+  max-width: 560px;
+  margin: 0 auto 2rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--teal);
+  background: rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  border-radius: var(--radius);
+  padding: 0.85rem 1.4rem;
+  letter-spacing: 0.01em;
+}
+
+/* ── Counter ────────────────────────────── */
+.wom-counter {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 2.5rem;
+}
+
+.wom-counter-skeleton {
+  display: inline-block;
+  width: 200px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 6px;
+  animation: wom-shimmer 1.4s infinite;
+}
+
+/* ── Cloud wrap ─────────────────────────── */
+.wom-cloud-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  height: 460px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) * 1.5);
+  overflow: hidden;
+}
+
+/* ── Word cloud (positioned words) ─────── */
+.wom-cloud {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.wom-word {
+  position: absolute;
+  font-family: var(--font);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: default;
+  user-select: none;
+  animation: wom-float var(--float-dur, 5s) ease-in-out infinite alternate;
+  transition: color 0.2s, text-shadow 0.2s, transform 0.2s;
+  will-change: transform;
+}
+
+.wom-word:hover {
+  text-shadow:
+    0 0 12px currentColor,
+    0 0 24px currentColor;
+  transform: scale(1.12);
+  z-index: 10;
+}
+
+/* New word fly-in */
+.wom-word--new {
+  animation:
+    wom-fly-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    wom-float var(--float-dur, 5s) ease-in-out 0.6s infinite alternate;
+}
+
+/* ── Loading skeletons ──────────────────── */
+.wom-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem 1.5rem;
+  padding: 2rem;
+}
+
+.wom-skeleton-word {
+  display: inline-block;
+  height: 14px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.07);
+  animation: wom-shimmer 1.4s infinite;
+  animation-delay: calc(var(--i) * 0.07s);
+  width: calc(40px + var(--i, 0) * 8px % 80px);
+}
+
+/* ── Error / empty states ───────────────── */
+.wom-fetch-error,
+.wom-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  gap: 0.5rem;
+}
+
+.wom-retry {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--accent);
+  border-radius: 8px;
+  padding: 0.25rem 0.75rem;
+  font-family: var(--font);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.wom-retry:hover {
+  border-color: var(--accent);
+  background: rgba(139, 124, 248, 0.08);
+}
+
+/* ── Keyframes ──────────────────────────── */
+@keyframes wom-float {
+  from { transform: translateY(0); }
+  to   { transform: translateY(calc(var(--float-dist, 8px) * -1)); }
+}
+
+@keyframes wom-fly-in {
+  from {
+    opacity: 0;
+    transform: scale(0.3) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes wom-shimmer {
+  0%   { opacity: 0.4; }
+  50%  { opacity: 0.9; }
+  100% { opacity: 0.4; }
+}
+
+/* ── Responsive ─────────────────────────── */
+@media (max-width: 600px) {
+  .wom-section {
+    padding: 4rem 0 5rem;
+  }
+
+  .wom-cloud-wrap {
+    height: 340px;
+  }
+
+  .wom-input {
+    font-size: 0.92rem;
+  }
+
+  .wom-title {
+    font-size: 1.5rem;
+  }
+}

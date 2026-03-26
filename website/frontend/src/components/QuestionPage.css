@@ -1,0 +1,301 @@
+/* ─────────────────────────────────────────
+   QUESTION PAGE
+───────────────────────────────────────── */
+
+.qp-page {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  padding: 0;
+  animation: qp-fadein 0.6s ease both;
+}
+
+@keyframes qp-fadein {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Header ── */
+.qp-header {
+  padding: 32px 0 0;
+  max-width: 720px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.qp-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 6px 0;
+  transition: color 0.2s;
+  letter-spacing: 0.03em;
+}
+
+.qp-back:hover {
+  color: var(--accent);
+}
+
+.qp-back svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* ── Body ── */
+.qp-body {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+.qp-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.qp-title {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 6px;
+  line-height: 1.2;
+}
+
+.qp-month {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 40px;
+}
+
+.qp-rule {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 36px 0;
+}
+
+/* ── Main question ── */
+.qp-question-block {
+  margin: 36px 0;
+}
+
+.qp-question-text {
+  font-size: clamp(1.15rem, 2.8vw, 1.5rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.65;
+  color: var(--text);
+  margin: 0 0 20px;
+  letter-spacing: -0.01em;
+}
+
+.qp-question-text::before {
+  content: '\201C';
+  font-size: 1.4em;
+  color: var(--accent);
+  line-height: 0;
+  vertical-align: -0.25em;
+  margin-right: 2px;
+}
+
+.qp-question-text::after {
+  content: '\201D';
+  font-size: 1.4em;
+  color: var(--accent);
+  line-height: 0;
+  vertical-align: -0.25em;
+  margin-left: 2px;
+}
+
+.qp-attribution {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+}
+
+/* ── Submit form ── */
+.qp-prompt-label {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+
+.qp-textarea {
+  width: 100%;
+  min-height: 110px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: Inter, sans-serif;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  padding: 14px 16px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.qp-textarea::placeholder {
+  color: var(--muted);
+}
+
+.qp-textarea:focus {
+  border-color: var(--accent);
+}
+
+.qp-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 22px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: Inter, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.qp-submit:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.qp-submit:disabled {
+  opacity: 0.5;
+  cursor: default;
+  transform: none;
+}
+
+.qp-thanks {
+  margin-top: 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--teal);
+}
+
+/* ── Perspectives ── */
+.qp-perspectives-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 20px;
+}
+
+.qp-perspective-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.qp-perspective {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  animation: qp-fadein 0.4s ease both;
+}
+
+.qp-perspective-text {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+
+.qp-perspective-author {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+/* ── Navigation ── */
+.qp-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.qp-nav-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.qp-nav-btn:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+/* ── Archive ── */
+.qp-archive-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+}
+
+.qp-archive-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.qp-archive-list li {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--muted);
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.qp-archive-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--border);
+}
+
+@media (max-width: 600px) {
+  .qp-body {
+    padding: 36px 16px 60px;
+  }
+  .qp-nav {
+    flex-direction: column;
+  }
+}

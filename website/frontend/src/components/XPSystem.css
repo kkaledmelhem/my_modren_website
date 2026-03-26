@@ -1,0 +1,223 @@
+/* ── XP System ── */
+
+/* ── Bar ── */
+.xp-bar-wrap {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 4px;
+  cursor: pointer;
+  transition: height 0.2s ease;
+}
+
+.xp-bar-wrap:hover,
+.xp-bar-wrap.xp-levelup {
+  height: 6px;
+}
+
+.xp-track {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  position: relative;
+}
+
+.xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--teal));
+  position: relative;
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 0 2px 2px 0;
+}
+
+/* Pulsing dot at progress head */
+.xp-dot {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 6px var(--teal), 0 0 12px var(--teal);
+  animation: xp-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes xp-pulse {
+  0%, 100% { opacity: 1; transform: translate(50%, -50%) scale(1); }
+  50% { opacity: 0.5; transform: translate(50%, -50%) scale(0.7); }
+}
+
+/* Level-up shimmer */
+.xp-bar-wrap.xp-levelup .xp-fill {
+  animation: xp-shimmer 0.4s ease 2;
+}
+
+@keyframes xp-shimmer {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(2.2); }
+  100% { filter: brightness(1); }
+}
+
+/* Maxed state: slow rainbow pulse */
+.xp-bar-wrap.xp-maxed .xp-fill {
+  background: linear-gradient(90deg, var(--accent), var(--teal), var(--blue), var(--accent));
+  background-size: 200% 100%;
+  animation: xp-rainbow 3s linear infinite;
+}
+
+@keyframes xp-rainbow {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+/* Tooltip */
+.xp-tooltip {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(13, 13, 26, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(139, 124, 248, 0.3);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  animation: xp-fadein 0.15s ease;
+}
+
+@keyframes xp-fadein {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* Gain flash label */
+.xp-gain-flash {
+  position: absolute;
+  bottom: 12px;
+  right: 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--teal);
+  text-shadow: 0 0 8px var(--teal);
+  pointer-events: none;
+  animation: xp-gain 1.6s ease forwards;
+}
+
+@keyframes xp-gain {
+  0% { opacity: 0; transform: translateY(0); }
+  15% { opacity: 1; }
+  70% { opacity: 1; transform: translateY(-14px); }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
+
+/* ── Max Level Modal ── */
+.xp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(2, 2, 8, 0.8);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: xp-fadein 0.3s ease;
+}
+
+.xp-modal {
+  background: rgba(13, 13, 26, 0.96);
+  border: 1px solid rgba(139, 124, 248, 0.35);
+  border-radius: 20px;
+  padding: 2.5rem 2.25rem;
+  max-width: 440px;
+  width: 90%;
+  text-align: center;
+  box-shadow:
+    0 0 60px rgba(139, 124, 248, 0.2),
+    0 20px 60px rgba(0, 0, 0, 0.7);
+  animation: xp-modal-in 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes xp-modal-in {
+  from { opacity: 0; transform: scale(0.88) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.xp-modal-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal);
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-bottom: 1.25rem;
+}
+
+.xp-modal-title {
+  font-family: var(--font);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+  margin-bottom: 0.85rem;
+  letter-spacing: -0.02em;
+}
+
+.xp-modal-msg {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 1.5rem;
+}
+
+.xp-modal-email {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  color: var(--accent);
+  background: rgba(139, 124, 248, 0.1);
+  border: 1px solid rgba(139, 124, 248, 0.35);
+  border-radius: 10px;
+  padding: 0.7rem 1.2rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.04em;
+  box-shadow: 0 0 20px rgba(139, 124, 248, 0.2);
+  animation: xp-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes xp-glow {
+  from { box-shadow: 0 0 12px rgba(139, 124, 248, 0.15); }
+  to { box-shadow: 0 0 28px rgba(139, 124, 248, 0.45); }
+}
+
+.xp-modal-close {
+  background: rgba(139, 124, 248, 0.12);
+  border: 1px solid rgba(139, 124, 248, 0.3);
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  padding: 0.55rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.xp-modal-close:hover {
+  background: rgba(139, 124, 248, 0.22);
+  border-color: rgba(139, 124, 248, 0.6);
+}

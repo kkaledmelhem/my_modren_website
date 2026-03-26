@@ -14,6 +14,7 @@ import Cursor from './components/Cursor';
 import SocialBar from './components/SocialBar';
 import Stats from './components/Stats';
 import AIChat from './components/AIChat';
+import MirrorInterview from './components/MirrorInterview';
 import OpenToWork from './components/OpenToWork';
 import Testimonials from './components/Testimonials';
 import SkillsRadar from './components/SkillsRadar';
@@ -29,6 +30,16 @@ import CodePlayground from './components/CodePlayground';
 import './components/CodePlayground.css';
 import BookingCalendar from './components/BookingCalendar';
 import './components/BookingCalendar.css';
+import ReturnVisitorBanner from './components/ReturnVisitorBanner';
+import XPSystem from './components/XPSystem';
+import GestureNav from './components/GestureNav';
+import WallOfMinds from './components/WallOfMinds';
+import IncidentBoard from './components/IncidentBoard';
+import FuturesMarket from './components/FuturesMarket';
+import QuestionPage from './components/QuestionPage';
+import RelocationMap from './components/RelocationMap';
+import CareerGraph from './components/CareerGraph';
+import EscapeRoom from './components/EscapeRoom';
 import blogPosts from './data/blogPosts';
 import caseStudies from './data/caseStudies';
 
@@ -49,8 +60,16 @@ function App() {
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [showTerminalHint, setShowTerminalHint] = useState(false);
   const [recruiterMode, setRecruiterMode] = useState(null); // null | { role, source }
+  // null | 'question' | 'relocation' | 'career-graph' | 'escape-room' | 'futures' | 'incident-board'
+  const [specialView, setSpecialView] = useState(null);
 
   const t = tr[lang];
+
+  // ── 3am Build mode ──
+  useEffect(() => {
+    const h = new Date().getHours();
+    if (h >= 0 && h < 4) document.body.classList.add('three-am-mode');
+  }, []);
 
   const toggleTheme = () =>
     setTheme((prev) => {
@@ -148,6 +167,11 @@ function App() {
     return () => clearTimeout(timer);
   }, [loaded]);
 
+  // ── XP: +50 when terminal opens ──
+  useEffect(() => {
+    if (terminalOpen) window.dispatchEvent(new CustomEvent('km-xp', { detail: { amount: 50, reason: 'terminal' } }));
+  }, [terminalOpen]);
+
   const currentPost = typeof blogView === 'string'
     ? blogPosts.find((p) => p.id === blogView) || null
     : null;
@@ -157,10 +181,11 @@ function App() {
     : null;
 
   return (
-    <AppCtx.Provider value={{ theme, lang, t, toggleTheme, toggleLang, blogView, setBlogView, caseStudyView, setCaseStudyView }}>
+    <AppCtx.Provider value={{ theme, lang, t, toggleTheme, toggleLang, blogView, setBlogView, caseStudyView, setCaseStudyView, specialView, setSpecialView }}>
       <Cursor />
       <SocialBar />
       <AIChat />
+      <MirrorInterview />
       <OpenToWork />
 
       {/* Hacker Terminal easter egg */}
@@ -185,7 +210,7 @@ function App() {
 
       <Navbar />
 
-      {blogView === null && caseStudyView === null && (
+      {blogView === null && caseStudyView === null && specialView === null && (
         <main>
           <Hero recruiterMode={recruiterMode} />
           <Stats />
@@ -199,9 +224,41 @@ function App() {
           <CodePlayground />
           <Testimonials />
           <GitHubActivity />
+          <WallOfMinds />
           <JDAnalyzer />
           <BookingCalendar />
           <Contact />
+        </main>
+      )}
+
+      {specialView === 'question' && (
+        <main>
+          <QuestionPage onBack={() => setSpecialView(null)} />
+        </main>
+      )}
+      {specialView === 'relocation' && (
+        <main>
+          <RelocationMap onBack={() => setSpecialView(null)} />
+        </main>
+      )}
+      {specialView === 'career-graph' && (
+        <main>
+          <CareerGraph onBack={() => setSpecialView(null)} />
+        </main>
+      )}
+      {specialView === 'escape-room' && (
+        <main>
+          <EscapeRoom onBack={() => setSpecialView(null)} />
+        </main>
+      )}
+      {specialView === 'incident-board' && (
+        <main>
+          <IncidentBoard onBack={() => setSpecialView(null)} />
+        </main>
+      )}
+      {specialView === 'futures' && (
+        <main>
+          <FuturesMarket onBack={() => setSpecialView(null)} />
         </main>
       )}
 
@@ -254,6 +311,10 @@ function App() {
         }}
         aria-label="Back to top"
       >↑</button>
+
+      <ReturnVisitorBanner />
+      <XPSystem />
+      <GestureNav />
     </AppCtx.Provider>
   );
 }
