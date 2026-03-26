@@ -1,29 +1,17 @@
 package com.khaledmelhem.website.controller;
 
-<<<<<<< HEAD
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 import com.khaledmelhem.website.model.AnalyticsEvent;
 import com.khaledmelhem.website.repository.AnalyticsRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
-
-@RestController
-@RequestMapping("/api/resume")
-@CrossOrigin("*")
-=======
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.node.ArrayNode;
-import tools.jackson.databind.node.ObjectNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,15 +25,15 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin
->>>>>>> 8620996 (Add backend: visitor tracking, booking system, resume tailoring endpoints)
+@CrossOrigin("*")
 public class ResumeController {
 
     private static final Logger log = LoggerFactory.getLogger(ResumeController.class);
 
-<<<<<<< HEAD
-    private static final String EVENT_TYPE   = "resume_download";
-    private static final String REDIS_KEY    = "analytics:resume_download";
+    // --- Resume download tracker (existing) ---
+
+    private static final String EVENT_TYPE = "resume_download";
+    private static final String REDIS_KEY  = "analytics:resume_download";
 
     @Autowired(required = false)
     private AnalyticsRepository analyticsRepository;
@@ -55,7 +43,7 @@ public class ResumeController {
 
     // GET /api/resume/track
     // Fire-and-forget tracker; actual PDF is served from /Khaled_Melhem_Resume.pdf (static)
-    @GetMapping("/track")
+    @GetMapping("/resume/track")
     public ResponseEntity<Map<String, Object>> trackDownload(HttpServletRequest request) {
         String ip        = request.getRemoteAddr();
         String userAgent = request.getHeader("User-Agent");
@@ -86,7 +74,10 @@ public class ResumeController {
         }
 
         return ResponseEntity.ok(Map.of("tracked", true));
-=======
+    }
+
+    // --- Resume tailoring via Groq (new) ---
+
     private static final String GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
     private static final String MODEL = "llama-3.3-70b-versatile";
 
@@ -233,6 +224,5 @@ public class ResumeController {
             ),
             "education", "B.Sc. Computer Engineering · Jordan University of Science and Technology · 2019"
         );
->>>>>>> 8620996 (Add backend: visitor tracking, booking system, resume tailoring endpoints)
     }
 }
