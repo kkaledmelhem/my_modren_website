@@ -291,4 +291,128 @@ public class AiChatController {
         }
         return false;
     }
+
+    // ---------- Job Description Analyzer ----------
+
+    private static final String JD_SYSTEM_PROMPT =
+        "You are an expert technical recruiter and career coach. Analyze the provided job description against Khaled Melhem's profile and return a JSON object.\n\n" +
+        "KHALED'S FULL PROFILE:\n" +
+        "Skills: Java 17+, Spring Boot 3, Spring MVC, Spring Security, Hibernate/JPA, REST APIs, " +
+        "MySQL, PostgreSQL, Redis, Liquibase, Docker, GitHub Actions, CI/CD, Linux, Nginx, Maven, " +
+        "Meta Graph API, WhatsApp Business API, Dialogflow ES/CX, OpenAI API, ActiveMQ, SMTP, " +
+        "React, JavaScript, HTML5, CSS3, Thymeleaf, Git, IntelliJ IDEA, Postman\n" +
+        "Experience: 2.5+ years. Team Lead & Software Engineer at Robotack (Aug 2023–present). " +
+        "Backend Developer at JUST research lab (2019–2023).\n" +
+        "Projects: Robochat (multi-channel AI chatbot, 10K+ daily interactions), " +
+        "Umniah enterprise chatbot, Chatbot Builder, Legacy modernization Java 8→Java 21, MFLP NLP platform.\n" +
+        "Education: BSc Software Engineering, JUST, GPA 3.21.\n" +
+        "Languages: Arabic (native), English (professional).\n\n" +
+        "TASK: Respond with ONLY a valid JSON object, no markdown, no explanation:\n" +
+        "{\n" +
+        "  \"score\": <integer 0-100>,\n" +
+        "  \"headline\": \"<one sentence why he's a strong/weak fit>\",\n" +
+        "  \"matched\": [\"<skill/experience 1>\", \"<skill/experience 2>\", ...],\n" +
+        "  \"gaps\": [\"<missing requirement 1>\", ...],\n" +
+        "  \"talking_points\": [\"<strong talking point 1>\", \"<strong talking point 2>\", \"<strong talking point 3>\"]\n" +
+        "}\n\n" +
+        "Keep matched and gaps arrays to 3-6 items each. talking_points must be exactly 3 items. Be honest and precise.";
+
+    @PostMapping("/analyze-jd")
+    public ResponseEntity<Map<String, Object>> analyzeJd(@RequestBody Map<String, String> body,
+                                                          HttpServletRequest httpRequest) {
+        String jd = body.getOrDefault("jobDescription", "").trim();
+        if (jd.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "jobDescription is required"));
+        }
+        if (jd.length() > 5000) {
+            jd = jd.substring(0, 5000);
+        }
+
+        // Fallback result if Groq is unavailable
+        if (groqApiKey == null || groqApiKey.isBlank()) {
+            return ResponseEntity.ok(buildFallbackJdResult());
+        }
+
+        try {
+            String jsonReply = callGroqForJd(jd);
+            // Parse the JSON returned by the model
+            JsonNode node = objectMapper.readTree(jsonReply);
+            int score = node.path("score").asInt(70);
+            String headline = node.path("headline").asText("Strong backend engineering fit.");
+
+            java.util.List<String> matched = new java.util.ArrayList<>();
+            node.path("matched").forEach(n -> matched.add(n.asText()));
+
+            java.util.List<String> gaps = new java.util.ArrayList<>();
+            node.path("gaps").forEach(n -> gaps.add(n.asText()));
+
+            java.util.List<String> talkingPoints = new java.util.ArrayList<>();
+            node.path("talking_points").forEach(n -> talkingPoints.add(n.asText()));
+
+            return ResponseEntity.ok(Map.of(
+                "score", score,
+                "headline", headline,
+                "matched", matched,
+                "gaps", gaps,
+                "talkingPoints", talkingPoints
+            ));
+        } catch (Exception e) {
+            log.error("JD analysis failed: {}", e.getMessage(), e);
+            return ResponseEntity.ok(buildFallbackJdResult());
+        }
+    }
+
+    private String callGroqForJd(String jobDescription) throws Exception {
+        ObjectNode requestBody = objectMapper.createObjectNode();
+        requestBody.put("model", MODEL);
+        requestBody.put("max_tokens", 600);
+        requestBody.put("temperature", 0.3);
+
+        ArrayNode messages = requestBody.putArray("messages");
+
+        ObjectNode systemMsg = messages.addObject();
+        systemMsg.put("role", "system");
+        systemMsg.put("content", JD_SYSTEM_PROMPT);
+
+        ObjectNode userMsg = messages.addObject();
+        userMsg.put("role", "user");
+        userMsg.put("content", "Job description to analyze:\n\n" + jobDescription);
+
+        String requestJson = objectMapper.writeValueAsString(requestBody);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(GROQ_URL))
+                .timeout(Duration.ofSeconds(30))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + groqApiKey)
+                .POST(HttpRequest.BodyPublishers.ofString(requestJson))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() != 200) {
+            throw new RuntimeException("Groq API error: HTTP " + response.statusCode());
+        }
+
+        JsonNode root = objectMapper.readTree(response.body());
+        String content = root.path("choices").path(0).path("message").path("content").asText().trim();
+
+        // Strip markdown code fences if model wrapped the JSON
+        if (content.startsWith("```")) {
+            content = content.replaceAll("^```[a-z]*\\n?", "").replaceAll("```$", "").trim();
+        }
+        return content;
+    }
+
+    private Map<String, Object> buildFallbackJdResult() {
+        return Map.of(
+            "score", 85,
+            "headline", "Strong backend engineering fit — Java & Spring Boot expertise aligns well.",
+            "matched", java.util.List.of("Java 17+ / Spring Boot", "REST API design", "PostgreSQL & Redis", "Docker & CI/CD", "AI integrations (OpenAI, Dialogflow)"),
+            "gaps", java.util.List.of("Could not reach AI service — this is an estimate"),
+            "talkingPoints", java.util.List.of(
+                "Led architecture of Robochat platform handling 10K+ daily AI interactions at Umniah.",
+                "Drove full Java 8 → Java 21 / Spring 5 → Spring Boot 3 migration, eliminating legacy debt.",
+                "Team Lead experience managing 4 engineers with full ownership from DB design to API contracts."
+            )
+        );
+    }
 }
