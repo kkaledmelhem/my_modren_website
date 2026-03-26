@@ -24,24 +24,9 @@ const Stats = () => (
         </div>
 
         <div className="bento-card bc-4 reveal">
-          <div
-            className="bc-label"
-            style={{ color: 'var(--accent)', opacity: 0.6 }}
-          >
-            Next destination
-          </div>
-          <div
-            className="bc-big"
-            style={{ color: 'var(--accent)', fontSize: '2.2rem' }}
-          >
-            🇩🇪 Germany
-          </div>
-          <div
-            className="bc-sub"
-            style={{ color: 'var(--accent)', opacity: 0.6 }}
-          >
-            EU Blue Card · Chancenkarte · Job offer route
-          </div>
+          <div className="bc-label">Interactions</div>
+          <div className="bc-big" style={{ color: 'var(--accent)', fontSize: '2rem' }}>10K+</div>
+          <div className="bc-sub">Daily chatbot interactions</div>
         </div>
 
         <div className="bento-card bc-5 reveal">

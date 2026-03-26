@@ -25,7 +25,7 @@ const COMMANDS = {
     '  Stack   : Java 21 · Spring Boot · React',
     '  Built   : AI chatbot platform → 10K+ daily interactions',
     '  Led     : Team of 4 engineers',
-    '  Target  : Backend roles in Germany 🇩🇪',
+    '  Target  : Senior backend / team lead roles (remote & on-site)',
     '  Email   : khadme9@gmail.com',
   ],
 
