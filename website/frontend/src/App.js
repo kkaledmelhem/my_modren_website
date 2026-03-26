@@ -25,6 +25,10 @@ import GitHubActivity from './components/GitHubActivity';
 import TechMarquee from './components/TechMarquee';
 import HackerTerminal from './components/HackerTerminal';
 import JDAnalyzer from './components/JDAnalyzer';
+import CodePlayground from './components/CodePlayground';
+import './components/CodePlayground.css';
+import BookingCalendar from './components/BookingCalendar';
+import './components/BookingCalendar.css';
 import blogPosts from './data/blogPosts';
 import caseStudies from './data/caseStudies';
 
@@ -44,6 +48,7 @@ function App() {
   // Hacker terminal easter egg
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [showTerminalHint, setShowTerminalHint] = useState(false);
+  const [recruiterMode, setRecruiterMode] = useState(null); // null | { role, source }
 
   const t = tr[lang];
 
@@ -123,6 +128,13 @@ function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, [terminalOpen]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const role = params.get('role'); // e.g. "backend", "fullstack", "lead"
+    const source = params.get('source'); // e.g. "linkedin", "github"
+    if (role || source) setRecruiterMode({ role, source });
+  }, []);
+
   // Show the "/" hint toast once after the loader finishes
   useEffect(() => {
     if (!loaded) return;
@@ -175,7 +187,7 @@ function App() {
 
       {blogView === null && caseStudyView === null && (
         <main>
-          <Hero />
+          <Hero recruiterMode={recruiterMode} />
           <Stats />
           <TechMarquee />
           <About />
@@ -184,9 +196,11 @@ function App() {
           <Experience />
           <Projects />
           <CaseStudies onStudyClick={(id) => setCaseStudyView(id)} />
+          <CodePlayground />
           <Testimonials />
           <GitHubActivity />
           <JDAnalyzer />
+          <BookingCalendar />
           <Contact />
         </main>
       )}

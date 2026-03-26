@@ -173,8 +173,15 @@ const CodeWindow = () => (
   </div>
 );
 
-const Hero = () => {
+export default function Hero({ recruiterMode }) {
   const { t, lang } = useApp();
+
+  const roleHeadlines = {
+    backend: 'Backend Engineer · Java & Spring Boot',
+    fullstack: 'Full-Stack Engineer · Java + React',
+    lead: 'Engineering Team Lead · Java & AI Systems',
+  };
+  const dynamicTitle = recruiterMode?.role ? roleHeadlines[recruiterMode.role] || null : null;
   const h = t.hero;
   const [loaded, setLoaded] = useState(false);
   const sectionRef = useRef(null);
@@ -202,6 +209,14 @@ const Hero = () => {
 
   return (
     <section id="hero" ref={sectionRef}>
+      {recruiterMode && (
+        <div className="recruiter-banner">
+          <span className="rb-dot" />
+          {recruiterMode.source === 'linkedin' ? '👋 Welcome from LinkedIn · ' : '👋 Hi there · '}
+          {dynamicTitle || 'Tailored view for ' + (recruiterMode.role || 'you')}
+          <span className="rb-close" onClick={() => {}}>✕</span>
+        </div>
+      )}
       <ParticleCanvas />
       <div className="hero-aurora" />
       <div className="hero-aurora hero-aurora-2" />
@@ -227,6 +242,7 @@ const Hero = () => {
                   backgroundClip: 'text',
                 }}>{h.lastName}</em>
               </h1>
+              {dynamicTitle && <p className="hero-role-tag">{dynamicTitle}</p>}
             </div>
             <div className={`hero-line hero-line-3${loaded ? ' in' : ''}`}>
               <p className="hero-role">
@@ -283,4 +299,3 @@ const Hero = () => {
   );
 };
 
-export default Hero;
