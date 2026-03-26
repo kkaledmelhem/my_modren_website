@@ -76,15 +76,19 @@ export default function BookingCalendar() {
             {!loading && !fetchError && slots.length === 0 && (
               <p className="booking-empty">No slots available at the moment.</p>
             )}
-            {!loading && !fetchError && slots.map((slot, i) => (
-              <button
-                key={i}
-                className={`booking-slot-btn${selected === slot ? ' active' : ''}`}
-                onClick={() => { setSelected(slot); setResult(null); }}
-              >
-                {slot}
-              </button>
-            ))}
+            {!loading && !fetchError && slots.map((slot, i) => {
+              const value = typeof slot === 'object' ? slot.slot : slot;
+              const display = typeof slot === 'object' ? slot.label : slot;
+              return (
+                <button
+                  key={i}
+                  className={`booking-slot-btn${selected === value ? ' active' : ''}`}
+                  onClick={() => { setSelected(value); setResult(null); }}
+                >
+                  {display}
+                </button>
+              );
+            })}
           </div>
 
           <form className="booking-form" onSubmit={handleSubmit}>
@@ -115,7 +119,7 @@ export default function BookingCalendar() {
               type="submit"
               disabled={booking || !selected}
             >
-              {booking ? 'Confirming…' : selected ? `Confirm Booking — ${selected}` : 'Select a slot first'}
+              {booking ? 'Confirming…' : selected ? `Confirm Booking` : 'Select a slot first'}
             </button>
             {result && (
               <div className={`bk-result${result.ok ? ' success' : ' error'}`}>
