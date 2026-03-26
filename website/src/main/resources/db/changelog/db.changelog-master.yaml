@@ -44,3 +44,43 @@ databaseChangeLog:
               - column:
                   name: ip_address
                   type: VARCHAR(45)
+
+  - changeSet:
+      id: 2-create-analytics-events
+      author: khaled
+      changes:
+        - createTable:
+            tableName: analytics_events
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: event_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_data
+                  type: VARCHAR(500)
+              - column:
+                  name: ip_address
+                  type: VARCHAR(45)
+              - column:
+                  name: user_agent
+                  type: VARCHAR(500)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: idx_analytics_event_type
+            tableName: analytics_events
+            columns:
+              - column:
+                  name: event_type
