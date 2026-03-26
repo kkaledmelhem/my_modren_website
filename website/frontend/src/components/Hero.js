@@ -177,10 +177,23 @@ const Hero = () => {
   const { t, lang } = useApp();
   const h = t.hero;
   const [loaded, setLoaded] = useState(false);
+  const sectionRef = useRef(null);
 
   useEffect(() => {
     const id = setTimeout(() => setLoaded(true), 100);
     return () => clearTimeout(id);
+  }, []);
+
+  // Cursor-tracking radial glow (Awwwards #1 pattern)
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const onMove = (e) => {
+      el.style.setProperty('--mx', e.clientX + 'px');
+      el.style.setProperty('--my', e.clientY + 'px');
+    };
+    el.addEventListener('mousemove', onMove, { passive: true });
+    return () => el.removeEventListener('mousemove', onMove);
   }, []);
 
   const roles = lang === 'ar'
@@ -188,7 +201,7 @@ const Hero = () => {
     : ['Team Lead', 'Software Engineer', 'Java Specialist', 'AI Platform Builder'];
 
   return (
-    <section id="hero">
+    <section id="hero" ref={sectionRef}>
       <ParticleCanvas />
       <div className="hero-aurora" />
       <div className="hero-aurora hero-aurora-2" />
