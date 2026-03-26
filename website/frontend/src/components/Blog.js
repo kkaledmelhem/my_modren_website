@@ -1,8 +1,6 @@
-import { useApp } from '../App';
 import blogPosts from '../data/blogPosts';
 
 const Blog = ({ onPostClick }) => {
-  const { t } = useApp();
 
   return (
     <section id="blog" className="blog-section">

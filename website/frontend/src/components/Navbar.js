@@ -69,7 +69,7 @@ const Navbar = () => {
       const href = a.getAttribute('href');
       a.style.color = href === '#' + current ? 'var(--accent)' : '';
     });
-  }, [lang]);
+  }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });

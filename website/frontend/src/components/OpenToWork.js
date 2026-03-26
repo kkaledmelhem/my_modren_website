@@ -64,7 +64,6 @@ const OpenToWork = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const isOpen = status === 'open';
   const isBusy = status === 'busy';
   const showBanner = !dismissed && status !== null && status !== 'closed';
   // Floating badge: show when banner is dismissed but still open/busy

@@ -168,7 +168,7 @@ const HackerTerminal = ({ onClose }) => {
   ]);
   const [input, setInput] = useState('');
   const [cmdHistory, setCmdHistory] = useState([]);
-  const [histIdx, setHistIdx] = useState(-1);
+  const histIdxRef = useRef(-1);
   const inputRef = useRef(null);
   const bottomRef = useRef(null);
 
@@ -185,7 +185,7 @@ const HackerTerminal = ({ onClose }) => {
     if (!cmd) return;
 
     setCmdHistory((prev) => [cmd, ...prev]);
-    setHistIdx(-1);
+    histIdxRef.current = -1;
     setInput('');
 
     const result = resolveCmd(cmd);
@@ -225,19 +225,15 @@ const HackerTerminal = ({ onClose }) => {
     if (e.key === 'Enter') { e.preventDefault(); submit(); return; }
     if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setHistIdx((prev) => {
-        const next = Math.min(prev + 1, cmdHistory.length - 1);
-        setInput(cmdHistory[next] ?? '');
-        return next;
-      });
+      const next = Math.min(histIdxRef.current + 1, cmdHistory.length - 1);
+      histIdxRef.current = next;
+      setInput(cmdHistory[next] ?? '');
     }
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setHistIdx((prev) => {
-        const next = Math.max(prev - 1, -1);
-        setInput(next === -1 ? '' : cmdHistory[next] ?? '');
-        return next;
-      });
+      const next = Math.max(histIdxRef.current - 1, -1);
+      histIdxRef.current = next;
+      setInput(next === -1 ? '' : cmdHistory[next] ?? '');
     }
     if (e.key === 'Escape') { onClose(); }
   };
